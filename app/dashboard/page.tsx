@@ -7,7 +7,7 @@ import { getAuth, Auth } from "firebase/auth";
 import app from '../../components/firebase';
 
 export default function Dashboard() {
-
+  /*
     const router = useRouter();
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export default function Dashboard() {
           router.push('/'); // Redirect to login page if not authenticated
         }
       }, []);
-
+        */
   return (
     <h1>Dashboard</h1>
   )

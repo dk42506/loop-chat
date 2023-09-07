@@ -42,9 +42,10 @@ export default function Home() {
       .then((userCredential) => {
         // Handle successful account creation
         console.log("Account created")
-        router.push("/dashboard")
         const user = userCredential.user;
-        // ...
+        setEmail('');
+        setPassword('');
+        router.push("/dashboard")
       })
       .catch((error) => {
         // Handle account creation error
