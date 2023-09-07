@@ -16,7 +16,6 @@ const variants = {
 
 const auth = getAuth(app);
 
-
 export default function Home() {
 
   const router = useRouter();
@@ -36,25 +35,37 @@ export default function Home() {
     setShowLoginForm(false);
     setShowCreateAccountForm(true);
   };
-
+  /*
   const handleCreateAccount = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Handle successful account creation
-        console.log("Account created")
         const user = userCredential.user;
-        setEmail('');
-        setPassword('');
-        router.push("/dashboard")
+        console.log("Account created"); // Add this for debugging
+        router.push('/dashboard');
       })
       .catch((error) => {
-        // Handle account creation error
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error(errorCode, errorMessage);
-        // ...
       });
   };
+  */
+
+  const handleCreateAccount = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log("Account created");
+      router.push('/dashboard');
+    } catch (error) {
+      /*
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+      */
+    }
+  };
+  
   
   return (
     <div className="bg-blue4 text-white min-h-screen flex items-center justify-center">
@@ -126,7 +137,7 @@ export default function Home() {
             className="p-10 bg-white rounded-lg shadow-lg"
           >
             <h1 className="text-3xl font-semibold mb-4 text-blue5">Create Account</h1>
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
                 <input
