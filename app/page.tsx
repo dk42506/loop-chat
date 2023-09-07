@@ -19,6 +19,8 @@ const auth = getAuth(app);
 
 export default function Home() {
 
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -40,6 +42,7 @@ export default function Home() {
       .then((userCredential) => {
         // Handle successful account creation
         console.log("Account created")
+        router.push("/dashboard")
         const user = userCredential.user;
         // ...
       })
