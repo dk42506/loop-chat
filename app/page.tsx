@@ -1,113 +1,173 @@
-import Image from 'next/image'
+"use client";
+
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import app from '../components/firebase';
+import { useRouter } from 'next/navigation';
+
+const variants = {
+  initial: { opacity: 0, x: -100 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 100 }, 
+  hidden: { opacity: 0, x: -100 }, 
+  visible: { opacity: 1, x: 0 },
+};
+
+const auth = getAuth(app);
+
 
 export default function Home() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showCreateAccountForm, setShowCreateAccountForm] = useState(false);
+
+  const handleGetStarted = () => {
+    setShowCreateAccountForm(false);
+    setShowLoginForm(true);
+  };
+
+  const handleDontHaveAccount = () => {
+    setShowLoginForm(false);
+    setShowCreateAccountForm(true);
+  };
+
+  const handleCreateAccount = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Handle successful account creation
+        console.log("Account created")
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        // Handle account creation error
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorCode, errorMessage);
+        // ...
+      });
+  };
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="bg-blue4 text-white min-h-screen flex items-center justify-center">
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={variants}
+        className={`p-10 bg-blue3 rounded-lg shadow-lg ${showLoginForm || showCreateAccountForm ? 'hidden' : ''}`}
+      >
+        <h1 className="text-3xl font-mono mb-4">Welcome to Loop</h1>
+        <p className="text-lg mb-8">Connect and chat with people effortlessly.</p>
+        <motion.button
+          onClick={handleGetStarted}  
+          className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+          whileHover={{ scale: 1.05 }}
+        >
+          Get Started
+        </motion.button>
+      </motion.div>
+      <AnimatePresence>
+      {showLoginForm && (
+          <motion.div
+            key="login-form"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={variants}
+            className="p-10 bg-white rounded-lg shadow-lg"
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <h1 className="text-3xl font-semibold mb-4 text-blue5">Log In</h1>
+            <form>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input
+                  type="email"
+                  className="w-full px-3 py-2 border rounded-lg text-blue5"
+                  placeholder="Enter your email"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border rounded-lg text-blue5"
+                  placeholder="Enter your password"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+              >
+                Log In
+              </button>
+            </form>
+            <p className="mt-4 text-blue5">
+              Don't have an account?{' '}
+              <a className="text-blue3 hover:underline cursor-pointer" onClick={handleDontHaveAccount}>Create Account</a>
+            </p>
+          </motion.div>
+        )}
+        {showCreateAccountForm && (
+          <motion.div
+            key="create-account-form"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={variants}
+            className="p-10 bg-white rounded-lg shadow-lg"
+          >
+            <h1 className="text-3xl font-semibold mb-4 text-blue5">Create Account</h1>
+            <form>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input
+                  type="email"
+                  className="w-full px-3 py-2 border rounded-lg text-blue5"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border rounded-lg text-blue5"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                <input
+                  type="username"
+                  className="w-full px-3 py-2 border rounded-lg text-blue5"
+                  placeholder="Enter your username"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+                onClick={handleCreateAccount}
+              >
+                Create Account
+              </button>
+            </form>
+            <p className="mt-4 text-blue5">
+              Already have an account?{' '}
+              <a className="text-blue3 hover:underline cursor-pointer" onClick={handleGetStarted}>
+                Log In
+              </a>
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
