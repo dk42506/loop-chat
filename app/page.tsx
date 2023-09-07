@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import app from '../components/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -35,12 +35,12 @@ export default function Home() {
     setShowLoginForm(false);
     setShowCreateAccountForm(true);
   };
-  /*
+  
   const handleCreateAccount = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("Account created"); // Add this for debugging
+        //console.log("Account created");
         router.push('/dashboard');
       })
       .catch((error) => {
@@ -49,23 +49,18 @@ export default function Home() {
         console.error(errorCode, errorMessage);
       });
   };
-  */
 
-  const handleCreateAccount = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
       const user = userCredential.user;
-      console.log("Account created");
       router.push('/dashboard');
-    } catch (error) {
-      /*
+    })
+    .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.error(errorCode, errorMessage);
-      */
-    }
+    });
   };
-  
   
   return (
     <div className="bg-blue4 text-white min-h-screen flex items-center justify-center">
@@ -97,13 +92,15 @@ export default function Home() {
             className="p-10 bg-white rounded-lg shadow-lg"
           >
             <h1 className="text-3xl font-semibold mb-4 text-blue5">Log In</h1>
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
                 <input
                   type="email"
                   className="w-full px-3 py-2 border rounded-lg text-blue5"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -112,11 +109,14 @@ export default function Home() {
                   type="password"
                   className="w-full px-3 py-2 border rounded-lg text-blue5"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
                 className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+                onClick={handleSignIn}
               >
                 Log In
               </button>
