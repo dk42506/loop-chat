@@ -29,11 +29,15 @@ export default function Home() {
   const handleGetStarted = () => {
     setShowCreateAccountForm(false);
     setShowLoginForm(true);
+    setEmail("")
+    setPassword("")
   };
 
   const handleDontHaveAccount = () => {
     setShowLoginForm(false);
     setShowCreateAccountForm(true);
+    setEmail("")
+    setPassword("")
   };
   
   const handleCreateAccount = () => {
@@ -42,6 +46,8 @@ export default function Home() {
         const user = userCredential.user;
         //console.log("Account created");
         router.push('/dashboard');
+        setEmail("")
+        setPassword("")
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -55,6 +61,8 @@ export default function Home() {
     .then((userCredential) => {
       const user = userCredential.user;
       router.push('/dashboard');
+      setEmail("")
+      setPassword("")
     })
     .catch((error) => {
       const errorCode = error.code;
