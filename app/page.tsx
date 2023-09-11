@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import app from '../components/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -15,6 +16,7 @@ const variants = {
 };
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 export default function Home() {
 
@@ -42,12 +44,21 @@ export default function Home() {
   
   const handleCreateAccount = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async(userCredential) => {
         const user = userCredential.user;
         //console.log("Account created");
-        router.push('/dashboard');
-        setEmail("")
-        setPassword("")
+        try {
+          await addDoc(collection(db, "users"), {
+            uid: user.uid,
+            email: user.email,
+            username: username,
+          });
+          router.push('/dashboard');
+          setEmail("")
+          setPassword("")
+        } catch (error) {
+          console.error("Error adding document: ", error);
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -63,6 +74,7 @@ export default function Home() {
       router.push('/dashboard');
       setEmail("")
       setPassword("")
+      setUsername("")
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -172,6 +184,7 @@ export default function Home() {
                   type="username"
                   className="w-full px-3 py-2 border rounded-lg text-blue5"
                   placeholder="Enter your username"
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <button
