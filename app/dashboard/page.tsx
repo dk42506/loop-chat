@@ -30,7 +30,6 @@ export default function Dashboard() {
               {/* Sample Chat Item */}
               <li className="text-white text-lg border-t border-blue5 pt-4">Chat 1</li>
               <li className="text-white text-lg border-t border-b border-blue5 py-4">Chat 2</li>
-              <li className="text-white text-lg border-b border-blue5 py-4">Chat 3</li>
               {/* Add more chat items as needed */}
             </ul>
           </div>

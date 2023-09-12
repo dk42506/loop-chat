@@ -1,4 +1,8 @@
 import React from 'react';
+import { getAuth, signOut } from "firebase/auth";
+import app from '../components/firebase';
+
+const auth = getAuth(app);
 
 export default function Navbar() {
   return (
@@ -19,7 +23,11 @@ export default function Navbar() {
         <button
           className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
           onClick={() => {
-            // Handle sign out action
+            signOut(auth).then(() => {
+              // Sign-out successful.
+            }).catch((error) => {
+              // An error happened.
+            }); 
           }}
         >
           Sign Out
