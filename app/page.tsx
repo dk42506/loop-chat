@@ -44,7 +44,7 @@ export default function Home() {
     setPassword("")
   };
 
-  const checkUsernameExists = async (username) => {
+  const checkUsernameExists = async (username: string) => {
     const usersCollection = collection(db, 'users');
     const q = query(usersCollection, where('username', '==', username));
     const querySnapshot = await getDocs(q);
@@ -77,7 +77,7 @@ export default function Home() {
       setPassword('');
       setUsername('');
       setCreateAccountError('');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
         setCreateAccountError('Account with this email already exists.');
       } else {
