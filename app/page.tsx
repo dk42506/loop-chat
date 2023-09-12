@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import app from '../components/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -27,6 +27,8 @@ export default function Home() {
   const [username, setUsername] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showCreateAccountForm, setShowCreateAccountForm] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [createAccountError, setCreateAccountError] = useState('');
 
   const handleGetStarted = () => {
     setShowCreateAccountForm(false);
@@ -41,30 +43,47 @@ export default function Home() {
     setEmail("")
     setPassword("")
   };
+
+  const checkUsernameExists = async (username) => {
+    const usersCollection = collection(db, 'users');
+    const q = query(usersCollection, where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  };
   
-  const handleCreateAccount = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async(userCredential) => {
-        const user = userCredential.user;
-        //console.log("Account created");
-        try {
-          await addDoc(collection(db, "users"), {
-            uid: user.uid,
-            email: user.email,
-            username: username,
-          });
-          router.push('/dashboard');
-          setEmail("")
-          setPassword("")
-        } catch (error) {
-          console.error("Error adding document: ", error);
-        }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(errorCode, errorMessage);
+  const handleCreateAccount = async () => {
+    if (!username || !email || !password) {
+      setCreateAccountError("Please complate all fields."); 
+      return; 
+    }
+
+    const usernameExists = await checkUsernameExists(username);
+
+    if (usernameExists) {
+      setCreateAccountError('Username already exists. Please choose a different one.');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await addDoc(collection(db, 'users'), {
+        uid: user.uid,
+        email: user.email,
+        username: username,
       });
+      router.push('/dashboard');
+      setEmail('');
+      setPassword('');
+      setUsername('');
+      setCreateAccountError('');
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setCreateAccountError('Account with this email already exists.');
+      } else {
+        console.error('Error creating account: ', error);
+      }
+    }
   };
 
   const handleSignIn = () => {
@@ -75,10 +94,12 @@ export default function Home() {
       setEmail("")
       setPassword("")
       setUsername("")
+      setLoginError("");
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      setLoginError(errorMessage);
     });
   };
   
@@ -133,6 +154,7 @@ export default function Home() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+              {loginError && <p className="text-red-500">{loginError}</p>}
               <button
                 type="submit"
                 className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
@@ -187,6 +209,7 @@ export default function Home() {
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
+              {createAccountError && <p className="text-red-500">{createAccountError}</p>}
               <button
                 type="submit"
                 className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
