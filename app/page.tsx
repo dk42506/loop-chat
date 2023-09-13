@@ -35,14 +35,11 @@ export default function Home() {
     setShowLoginForm(true);
     setEmail("")
     setPassword("")
-    // Check if the user is already signed in
     const user = auth.currentUser;
 
     if (user) {
-      // If the user is already signed in, redirect them to the dashboard
       router.push('/dashboard');
     } else {
-      // If the user is not signed in, show the login form
       setShowCreateAccountForm(false);
       setShowLoginForm(true);
       setEmail('');
