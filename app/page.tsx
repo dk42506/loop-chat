@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
 import app from '../components/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -63,31 +63,34 @@ export default function Home() {
   
   const handleCreateAccount = async () => {
     if (!username || !email || !password) {
-      setCreateAccountError("Please complate all fields."); 
-      return; 
+      setCreateAccountError("Please complete all fields.");
+      return;
     }
-
+  
     const usernameExists = await checkUsernameExists(username);
-
+  
     if (usernameExists) {
       setCreateAccountError('Username already exists.');
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      await addDoc(collection(db, 'users'), {
-        uid: user.uid,
+  
+      // Create a Firestore document with the user's UID as its name
+      const userDocRef = doc(db, 'users', user.uid);
+      await setDoc(userDocRef, {
         email: user.email,
         username: username,
       });
+  
       router.push('/dashboard');
       setEmail('');
       setPassword('');
       setUsername('');
       setCreateAccountError('');
-    } catch (error: any) {
+    } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
         setCreateAccountError('Account with this email already exists.');
       } else {
