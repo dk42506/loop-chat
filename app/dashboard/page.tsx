@@ -1,14 +1,47 @@
 "use client";
 
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { getAuth, Auth } from "firebase/auth";
+import { getFirestore, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 import app from '../../components/firebase';
 
+
 export default function Dashboard() {
+
+  const [chats, setChats] = useState<string[]>([]);
+
+  const auth = getAuth(app);
+  const db = getFirestore(app); 
+
+  useEffect(() => {
+      if (!auth.currentUser) return;
+
+      const currentUserId = auth.currentUser.uid;
+      const chatsRef = collection(db, 'chats');
+      const q = query(chatsRef, where(`participants.${currentUserId}`, '==', true));
+
+      const unsubscribe = onSnapshot(q, snapshot => {
+          const chatUsers: string[] = [];
+
+          snapshot.forEach(doc => {
+              const participants = Object.keys(doc.data().participants);
+              const otherUser = participants.find(id => id !== currentUserId);
+              if (otherUser) {
+                  // Fetch the username for the 'otherUser' from Firestore and push to 'chatUsers'
+                  // This might involve another query. For simplicity, we're pushing user IDs.
+                  // Ideally, you should have a function that fetches the username based on user ID.
+                  chatUsers.push(otherUser);
+              }
+          });
+
+          setChats(chatUsers);
+      });
+
+      return () => unsubscribe();
+  }, []);
+
   const messages = [
     { text: 'Hello!', sender: 'User1' },
     { text: 'Hi there!', sender: 'User2' },
@@ -27,11 +60,11 @@ export default function Dashboard() {
           <div className="bg-blue3 w-1/4 p-4">
             {/* Add your list of previous chats here */}
             <ul className="space-y-4">
-              {/* Sample Chat Item */}
-              <li className="text-white text-lg border-t border-blue5 pt-4">Chat 1</li>
-              <li className="text-white text-lg border-t border-b border-blue5 py-4">Chat 2</li>
-              {/* Add more chat items as needed */}
+                {chats.map((chatUser, index) => (
+                    <li key={index} className="text-white text-lg border-t border-blue5 pt-4">{chatUser}</li>
+                ))}
             </ul>
+
           </div>
 
           {/* Active Chat (Right Panel) */}
