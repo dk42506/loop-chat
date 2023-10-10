@@ -3,44 +3,54 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
-import { getFirestore, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { getFirestore, collection, query, where, onSnapshot, getDocs } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import app from '../../components/firebase';
 
-
 export default function Dashboard() {
+    const [chats, setChats] = useState<string[]>([]);
+    const [currentUsername, setCurrentUsername] = useState<string | null>(null);
 
-  const [chats, setChats] = useState<string[]>([]);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const auth = getAuth(app);
-  const db = getFirestore(app); 
+    useEffect(() => {
+        const fetchUsername = async () => {
+            if (auth.currentUser) {
+                const userRef = collection(db, 'users');
+                const q = query(userRef, where('uid', '==', auth.currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    const fetchedUsername = querySnapshot.docs[0].data().username;
+                    setCurrentUsername(fetchedUsername);
+                }
+            }
+        };
+        fetchUsername();
+    }, []);
 
-  useEffect(() => {
-      if (!auth.currentUser) return;
+    useEffect(() => {
+        if (!currentUsername) return;
 
-      const currentUserId = auth.currentUser.uid;
-      const chatsRef = collection(db, 'chats');
-      const q = query(chatsRef, where(`participants.${currentUserId}`, '==', true));
+        const chatsRef = collection(db, 'chats');
+        const q = query(chatsRef, where('participants', 'array-contains', currentUsername));
 
-      const unsubscribe = onSnapshot(q, snapshot => {
-          const chatUsers: string[] = [];
+        const unsubscribe = onSnapshot(q, snapshot => {
+            const chatUsers: string[] = [];
 
-          snapshot.forEach(doc => {
-              const participants = Object.keys(doc.data().participants);
-              const otherUser = participants.find(id => id !== currentUserId);
-              if (otherUser) {
-                  // Fetch the username for the 'otherUser' from Firestore and push to 'chatUsers'
-                  // This might involve another query. For simplicity, we're pushing user IDs.
-                  // Ideally, you should have a function that fetches the username based on user ID.
-                  chatUsers.push(otherUser);
-              }
-          });
+            snapshot.forEach(doc => {
+              const otherUser = doc.data().participants.find((username: string) => username !== currentUsername);
 
-          setChats(chatUsers);
-      });
+                if (otherUser) {
+                    chatUsers.push(otherUser);
+                }
+            });
 
-      return () => unsubscribe();
-  }, []);
+            setChats(chatUsers);
+        });
+
+        return () => unsubscribe();
+    }, [currentUsername]);
 
   const messages = [
     { text: 'Hello!', sender: 'User1' },
