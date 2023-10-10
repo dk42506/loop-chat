@@ -9,23 +9,28 @@ const db = getFirestore(app);
 export default function Navbar() {
 
   const [username, setUsername] = useState<string | null>(null);
+  const [activeUserUsername, setActiveUserUsername] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const searchResultsRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     const fetchUsername = async () => {
-        if (auth.currentUser) {
-            const userRef = collection(db, 'users');
-            const q = query(userRef, where('uid', '==', auth.currentUser.uid));
-
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                // Assuming that the field containing the username in your document is 'username'
-                const userDoc = querySnapshot.docs[0];
-                setUsername(userDoc.data().username);
-            }
-        }
+      if (auth.currentUser) {
+          const userRef = collection(db, 'users');
+          const q = query(userRef, where('uid', '==', auth.currentUser.uid));
+  
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+              // Assuming that the field containing the username in your document is 'username'
+              const userDoc = querySnapshot.docs[0];
+              const fetchedUsername = userDoc.data().username;
+              setUsername(fetchedUsername);
+  
+              // Set the activeUserUsername as well
+              setActiveUserUsername(fetchedUsername);
+          }
+      }
     };
 
     fetchUsername();
@@ -74,6 +79,7 @@ export default function Navbar() {
   }, [searchResults]);
 
   const handleNewChat = async (selectedUser: string) => {
+    const chatsRef = collection(db, 'chats');
     const currentUserId = auth.currentUser?.uid;
 
     // Ensure the current user has a valid user ID
@@ -83,29 +89,34 @@ export default function Navbar() {
     }
 
     // Ensure the user doesn't create a chat with themselves
-    if (selectedUser === currentUserId) {
+    if (selectedUser === activeUserUsername) {
         console.error("You cannot create a chat with yourself");
         return;
     }
 
     // Check if a chat with these participants already exists
-    const chatsRef = collection(db, 'chats');
-    const q = query(chatsRef, 
-                    where(`participants.${currentUserId}`, '==', true),
-                    where(`participants.${selectedUser}`, '==', true));
+    // Check if the current user initiated the chat
+    const q1 = query(chatsRef, where('participants', 'array-contains', activeUserUsername));
 
-    const existingChat = await getDocs(q);
+    const existingChat1 = await getDocs(q1);
 
-    if (!existingChat.empty) {
-        console.error("A chat between these users already exists.");
-        return;
+    // Check if the other user initiated the chat
+    const q2 = query(chatsRef, where('participants', 'array-contains', selectedUser));
+
+    const existingChat2 = await getDocs(q2);
+
+    if (!existingChat1.empty || !existingChat2.empty) {
+        for (let doc of existingChat1.docs.concat(existingChat2.docs)) {
+            // Ensure both participants are in the chat
+            if (doc.data().participants.includes(activeUserUsername) && doc.data().participants.includes(selectedUser)) {
+                console.error("A chat between these users already exists.");
+                return;
+            }
+        }
     }
 
-    // Define chat participants
-    const participants: Record<string, boolean> = {
-        [currentUserId]: true,  // current user
-        [selectedUser]: true    // clicked user
-    };
+    // Set up participants and add new chat
+    const participants = [activeUserUsername, selectedUser];
 
     // Add new chat to Firestore database
     addDoc(chatsRef, {
@@ -117,6 +128,7 @@ export default function Navbar() {
         console.error("Error creating chat:", error);
     });
   }
+
 
   useEffect(() => {
     // Function to handle the click event
