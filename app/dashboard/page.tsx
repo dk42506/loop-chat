@@ -119,7 +119,6 @@ export default function Dashboard() {
   
       await updateDoc(doc(db, 'chats', chatDoc.id), { messages: updatedMessages });
   
-      // Clear the input
       setMessageInput('');
     };
 
@@ -174,13 +173,19 @@ export default function Dashboard() {
                         {/* Chat Input */}
                         <div className="mt-auto p-4 bg-blue4">
                             <div className="flex items-center">
-                                <input
-                                    type="text"
-                                    className="flex-grow px-3 py-2 border rounded-lg text-white bg-blue5 mr-2"
-                                    placeholder="Type your message..."
-                                    value={messageInput}
-                                    onChange={e => setMessageInput(e.target.value)}
-                                />
+                            <input
+                                type="text"
+                                className="flex-grow px-3 py-2 border rounded-lg text-white bg-blue5 mr-2"
+                                placeholder="Type your message..."
+                                value={messageInput}
+                                onChange={e => setMessageInput(e.target.value)}
+                                onKeyPress={e => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        sendMessage();
+                                    }
+                                }}
+                            />
                                 <button
                                     className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     onClick={sendMessage}

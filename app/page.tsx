@@ -77,6 +77,10 @@ export default function Home() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
+      if (!auth.currentUser) {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
   
       // Create a Firestore document with the user's UID as its name
       const userDocRef = doc(db, 'users', user.uid);
