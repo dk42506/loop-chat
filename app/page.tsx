@@ -133,19 +133,19 @@ export default function Home() {
   };
   
   return (
-    <div className="bg-gradient-to-r from-cream to-grey1 text-black1 min-h-screen flex items-center justify-center">
+    <div className="bg-grey1 text-black min-h-screen flex items-center justify-center">
       <motion.div
         initial="initial"
         animate="animate"
         exit="exit"
         variants={variants}
-        className={`p-10 bg-blue3 rounded-lg shadow-lg ${showLoginForm || showCreateAccountForm ? 'hidden' : ''}`}
+        className={`p-10 bg-white rounded-lg shadow-lg ${showLoginForm || showCreateAccountForm ? 'hidden' : ''}`}
       >
         <h1 className="text-3xl font-mono mb-4">Welcome to Loop</h1>
         <p className="text-lg mb-8">Connect and chat with people effortlessly.</p>
         <motion.button
           onClick={handleGetStarted}  
-          className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+          className="slide-btn-vibrant2 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
           whileHover={{ scale: 1.05 }}
         >
           Get Started
@@ -186,7 +186,7 @@ export default function Home() {
               {loginError && <p className="text-red-500">{loginError}</p>}
               <button
                 type="submit"
-                className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+                className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                 onClick={handleSignIn}
               >
                 Log In
@@ -241,15 +241,15 @@ export default function Home() {
               {createAccountError && <p className="text-red-500">{createAccountError}</p>}
               <button
                 type="submit"
-                className="bg-blue4 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+                className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                 onClick={handleCreateAccount}
               >
                 Create Account
               </button>
             </form>
-            <p className="mt-4 text-blue5">
+            <p className="mt-4 text-black">
               Already have an account?{' '}
-              <a className="text-blue3 hover:underline cursor-pointer" onClick={handleGetStarted}>
+              <a className="text-black hover:underline cursor-pointer" onClick={handleGetStarted}>
                 Log In
               </a>
             </p>

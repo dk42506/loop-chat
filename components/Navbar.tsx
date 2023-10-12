@@ -152,7 +152,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r from-grey1 to-grey4 flex justify-between items-center p-4 relative">
+    <div className="bg-white1 flex justify-between items-center p-4 border-b border-black relative">
       {/* Left Section (Search Bar) */}
       <div className="flex items-center relative search-bar">
         {/* Search Bar */}
@@ -170,7 +170,7 @@ export default function Navbar() {
         {searchResults.length > 0 && (
           <ul
             ref={searchResultsRef}
-            className="absolute w-40 bg-blue3 border border-gray-200 rounded-lg shadow-lg"
+            className="absolute w-40 bg-grey2 border border-gray-200 rounded-lg shadow-lg"
           >
             {searchResults.map((result, index) => (
               <li key={index} 
@@ -189,7 +189,7 @@ export default function Navbar() {
           <span className="mr-6 text-lg font-bold text-white">{username}</span>
           {/* Sign Out Button */}
           <button
-            className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+            className=" bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
             onClick={() => {
               signOut(auth).then(() => {
                 // Sign-out successful.

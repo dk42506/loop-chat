@@ -1,6 +1,4 @@
-import type { Config } from 'tailwindcss'
-
-const config: Config = {
+module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,19 +7,55 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'cream': '#f5e7bc',
-        'grey1': '#f5f5f5',
-        'grey2': '#e0e0e0',
-        'grey3': '#b0b0b0',
-        'grey4': '#505050',
-        'black1': '#1f1f1f',
-      },
-      backgroundImage: {
-        'grey-gradient': 'linear-gradient(to right, #f5f5f5, #b0b0b0)',
-        'cream-gradient': 'linear-gradient(to right, #f5e7bc, #f5f5f5)',
+        'grey1': '#f7f7f7',
+        'grey2': '#ededed',
+        'grey3': '#d6d6d6',
+        'white1': '#ffffff',
+        'white2': '#fefefe',
+        'black': '#000000',
+        'vibrant1': '#ff4f81',
+        'vibrant2': '#42e2b8',
+        'vibrant3': '#ffbd39'
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function (pluginApi: any) {
+      pluginApi.addComponents({
+        '.slide-btn': {
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: '#ededed', // Grey2
+          color: '#000000', // Black
+
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '0',
+            left: '-100%',
+            width: '100%',
+            height: '100%',
+            transition: 'left 0.3s',
+            zIndex: '-1',
+          },
+
+          '&:hover::before': {
+            left: '0',
+          }
+        },
+        // Vibrant1 variant
+        '.slide-btn-vibrant1::before': {
+          backgroundColor: '#ff4f81', // Vibrant1
+        },
+        // Vibrant2 variant
+        '.slide-btn-vibrant2::before': {
+          backgroundColor: '#42e2b8', // Vibrant2
+        },
+        // Vibrant3 variant
+        '.slide-btn-vibrant3::before': {
+          backgroundColor: '#ffbd39', // Vibrant3
+        }
+      });
+    },
+  ],
 }
-export default config
