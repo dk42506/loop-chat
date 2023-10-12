@@ -78,6 +78,16 @@ export default function Home() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Wait for the auth state to be updated
+      await new Promise<void>(resolve => {
+        const unsubscribe = auth.onAuthStateChanged(authUser => {
+          if (authUser) {
+            unsubscribe();
+            resolve();
+          }
+        });
+      });
+
       if (!auth.currentUser) {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -87,6 +97,7 @@ export default function Home() {
       await setDoc(userDocRef, {
         email: user.email,
         username: username,
+        uid: user.uid,
       });
   
       router.push('/dashboard');
