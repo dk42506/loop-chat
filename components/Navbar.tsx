@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import app from '../components/firebase';
+import { motion } from 'framer-motion';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -186,10 +187,10 @@ export default function Navbar() {
 
       {/* Right Section (Username & Sign Out Button) */}
       <div className="flex items-center">
-          <span className="mr-6 text-lg font-bold text-white">{username}</span>
+          <span className="mr-6 text-lg font-bold text-black">{username}</span>
           {/* Sign Out Button */}
           <button
-            className=" bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+            className="slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
             onClick={() => {
               signOut(auth).then(() => {
                 // Sign-out successful.

@@ -145,7 +145,7 @@ export default function Home() {
         <p className="text-lg mb-8">Connect and chat with people effortlessly.</p>
         <motion.button
           onClick={handleGetStarted}  
-          className="slide-btn-vibrant2 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+          className="slide-btn slide-btn-vibrant3 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
           whileHover={{ scale: 1.05 }}
         >
           Get Started
