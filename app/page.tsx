@@ -106,10 +106,11 @@ export default function Home() {
       setUsername('');
       setCreateAccountError('');
     } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
+      const castedError = error as { code?: string; message?: string };
+      if (castedError.code === 'auth/email-already-in-use') {
         setCreateAccountError('Account with this email already exists.');
       } else {
-        console.error('Error creating account: ', error);
+        console.error('Error creating account: ', castedError.message);
       }
     }
   };
