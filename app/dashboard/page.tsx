@@ -195,7 +195,7 @@ export default function Dashboard() {
                                     className="slide-btn slide-btn-vibrant2 bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     whileHover={{ scale: 1.05 }}
                                 >
-                                    Sign Out
+                                    Send
                                 </motion.button>
                             </div>
                         </div>
