@@ -191,7 +191,7 @@ export default function Dashboard() {
                                 }}
                             />
                                 <button
-                                    className="bg-grey3 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     onClick={sendMessage}
                                 >
                                     Send
