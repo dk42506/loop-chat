@@ -124,7 +124,7 @@ export default function Dashboard() {
 
     return (
         <PrivateRoute>
-            <div className="bg-grey1 text-black min-h-screen flex flex-col">
+            <div className="bg-white text-black min-h-screen flex flex-col">
                 {/* Navbar */}
                 <Navbar />
 
@@ -152,7 +152,7 @@ export default function Dashboard() {
                     {/* Active Chat (Right Panel) */}
                     <div className="flex-grow p-4 flex flex-col">
                         {/* Chat Messages */}
-                        <div className="bg-blue4 rounded-lg p-4 h-full overflow-y-auto">
+                        <div className="rounded-lg p-4 h-full overflow-y-auto">
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
@@ -161,7 +161,7 @@ export default function Dashboard() {
                                     }`}
                                 >
                                     <div
-                                        className={`bg-white text-blue5 rounded-lg px-4 py-2 ${
+                                        className={`bg-grey1 text-blue5 rounded-lg px-4 py-2 ${
                                             message.sender === currentUsername
                                                 ? 'rounded-tr-none mr-auto'
                                                 : 'rounded-tl-none ml-auto'
@@ -175,11 +175,11 @@ export default function Dashboard() {
                         </div>
 
                         {/* Chat Input */}
-                        <div className="mt-auto p-4 bg-grey2 border rounded-lg">
+                        <div className="mt-auto p-4">
                             <div className="flex items-center">
                             <input
                                 type="text"
-                                className="flex-grow px-3 py-2 border rounded-lg text-black bg-blue5 mr-2"
+                                className="flex-grow bg-grey1 px-3 py-2 border rounded-lg text-black bg-grey1 mr-2"
                                 placeholder="Type your message..."
                                 value={messageInput}
                                 onChange={e => setMessageInput(e.target.value)}
@@ -191,7 +191,7 @@ export default function Dashboard() {
                                 }}
                             />
                                 <button
-                                    className="bg-grey3 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    className="bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     onClick={sendMessage}
                                 >
                                     Send
