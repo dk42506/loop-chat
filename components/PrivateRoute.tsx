@@ -35,7 +35,19 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   
     if (!user) {
       // You can add a loading spinner or message here while checking authentication state
-      return <div>Loading...</div>;
+      return(
+        <div className="flex justify-center items-center h-screen">
+          <div className="space-x-2 animate-bounce200">
+            <div className="w-12 h-12 bg-vibrant1 rounded-full"></div>
+          </div>
+          <div className="space-x-2 animate-bounce">
+            <div className="w-12 h-12 bg-vibrant2 rounded-full"></div>
+          </div>
+          <div className="space-x-2 animate-bounce400">
+            <div className="w-12 h-12 bg-vibrant3 rounded-full"></div>
+          </div>
+        </div>
+      )
     }
   
     return <>{children}</>;

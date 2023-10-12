@@ -6,6 +6,7 @@ import PrivateRoute from '../../components/PrivateRoute';
 import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import app from '../../components/firebase';
+import { motion } from 'framer-motion';
 
 export default function Dashboard() {
     const [chats, setChats] = useState<string[]>([]);
@@ -190,12 +191,12 @@ export default function Dashboard() {
                                     }
                                 }}
                             />
-                                <button
-                                    className="bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-                                    onClick={sendMessage}
+                                <motion.button
+                                    className="slide-btn slide-btn-vibrant2 bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    whileHover={{ scale: 1.05 }}
                                 >
-                                    Send
-                                </button>
+                                    Sign Out
+                                </motion.button>
                             </div>
                         </div>
                     </div>
