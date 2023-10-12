@@ -153,13 +153,13 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-white1 flex justify-between items-center p-4 border-b border-black relative">
+    <div className="bg-grey1 flex justify-between items-center p-4 relative border-b border-black z-10">
       {/* Left Section (Search Bar) */}
       <div className="flex items-center relative search-bar">
         {/* Search Bar */}
         <input
           type="text"
-          className="px-3 py-2 border rounded-lg text-blue5 bg-blue3 mr-2"
+          className="px-3 py-2 border rounded-lg text-black bg-grey2 mr-2"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => {
@@ -171,11 +171,11 @@ export default function Navbar() {
         {searchResults.length > 0 && (
           <ul
             ref={searchResultsRef}
-            className="absolute w-40 bg-grey2 border border-gray-200 rounded-lg shadow-lg"
+            className="absolute w-40 bg-grey2 border border-gray-200 rounded-lg shadow-lg z-20"
           >
             {searchResults.map((result, index) => (
               <li key={index} 
-              className="py-2 px-4 hover:bg-blue2 hover:text-white cursor-pointer"
+              className="py-2 px-4 hover:bg-vibrant2 hover:text-white cursor-pointer"
               onClick={() => handleNewChat(result)}
               >
                 {result}

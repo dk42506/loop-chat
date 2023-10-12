@@ -131,19 +131,19 @@ export default function Dashboard() {
                 {/* Chat Container */}
                 <div className="flex-grow flex">
                     {/* Previous Chats (Left Panel) */}
-                    <div className="bg-grey2 w-1/4 p-4 border-black border">
-                        <ul className="space-y-4">
+                    <div className="bg-grey2 w-1/4 p-4 border-grey3 rounded-lg shadow-md">
+                        <ul className="space-y-2">
                             {chats.map((chatUser, index) => (
                                 <li 
                                     key={index} 
                                     className={`
-                                        text-black text-lg border-t border-black pt-4 pb-4 pl-2 pr-2
-                                        cursor-pointer transition-all duration-200
-                                        ${chatUser === activeChatUser ? 'bg-grey3' : 'hover:bg-grey2 hover:shadow-md'}
+                                        border-b border-black text-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center 
+                                        cursor-pointer transition-all duration-300 transform
+                                        ${chatUser === activeChatUser ? 'bg-vibrant3' : 'hover:bg-grey2 hover:shadow-lg slide-btn slide-btn-vibrant3'}
                                     `}
                                     onClick={() => setActiveChatUser(chatUser)}
                                 >
-                                    {chatUser}
+                                    <span>{chatUser}</span>
                                 </li>
                             ))}
                         </ul>
@@ -175,7 +175,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Chat Input */}
-                        <div className="mt-auto p-4 bg-blue4">
+                        <div className="mt-auto p-4 bg-grey2 border rounded-lg">
                             <div className="flex items-center">
                             <input
                                 type="text"
@@ -191,7 +191,7 @@ export default function Dashboard() {
                                 }}
                             />
                                 <button
-                                    className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    className="bg-grey3 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     onClick={sendMessage}
                                 >
                                     Send
