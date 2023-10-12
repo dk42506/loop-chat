@@ -179,7 +179,7 @@ export default function Dashboard() {
                             <div className="flex items-center">
                             <input
                                 type="text"
-                                className="flex-grow px-3 py-2 border rounded-lg text-white bg-blue5 mr-2"
+                                className="flex-grow px-3 py-2 border rounded-lg text-black bg-blue5 mr-2"
                                 placeholder="Type your message..."
                                 value={messageInput}
                                 onChange={e => setMessageInput(e.target.value)}
@@ -191,7 +191,7 @@ export default function Dashboard() {
                                 }}
                             />
                                 <button
-                                    className="bg-blue2 text-white px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    className="bg-grey3 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     onClick={sendMessage}
                                 >
                                     Send
