@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import { getFirestore, collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import app from '../components/firebase';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -156,6 +156,7 @@ export default function Navbar() {
     <div className="bg-grey1 flex justify-between items-center p-4 relative border-b border-black z-10">
       {/* Left Section (Search Bar) */}
       <div className="flex items-center relative search-bar">
+
         {/* Search Bar */}
         <input
           type="text"
@@ -168,21 +169,29 @@ export default function Navbar() {
         />
 
         {/* Display search results */}
-        {searchResults.length > 0 && (
-          <ul
-            ref={searchResultsRef}
-            className="absolute w-40 bg-grey2 border border-gray-200 rounded-lg shadow-lg z-20"
-          >
-            {searchResults.map((result, index) => (
-              <li key={index} 
-              className="py-2 px-4 hover:bg-vibrant2 hover:text-white cursor-pointer"
-              onClick={() => handleNewChat(result)}
-              >
-                {result}
-              </li>
-            ))}
-          </ul>
-        )}
+        <AnimatePresence mode="wait">
+          {searchResults.length > 0 && (
+            <motion.ul
+              ref={searchResultsRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex items-center bg-grey2 border-l border-gray-200 rounded-lg shadow-lg space-x-4"
+            >
+              {searchResults.map((result, index) => (
+                <motion.li 
+                  key={index} 
+                  className="py-2 px-4 hover:bg-vibrant2 hover:text-white cursor-pointer inline-block"
+                  onClick={() => handleNewChat(result)}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {result}
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Right Section (Username & Sign Out Button) */}
