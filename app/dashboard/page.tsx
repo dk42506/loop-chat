@@ -124,24 +124,19 @@ export default function Dashboard() {
 
     return (
         <PrivateRoute>
-            <div className="bg-blue4 text-white min-h-screen flex flex-col">
+            <div className="bg-black1 text-cream min-h-screen flex flex-col">
                 {/* Navbar */}
                 <Navbar />
 
                 {/* Chat Container */}
                 <div className="flex-grow flex">
                     {/* Previous Chats (Left Panel) */}
-                    <div className="bg-blue3 w-1/4 p-4">
+                    <div className="bg-grey4 w-1/4 p-4">
                         <ul className="space-y-4">
                             {chats.map((chatUser, index) => (
                                 <li 
                                     key={index} 
-                                    className={`
-                                        text-white text-lg border-t border-blue5 pt-4 pb-4 pl-2 pr-2
-                                        cursor-pointer
-                                        transition-all duration-200
-                                        ${chatUser === activeChatUser ? 'bg-blue2' : 'hover:bg-blue2 hover:shadow-md'}
-                                    `}
+                                    className={`text-white text-lg border-t border-blue5 pt-4 ${chatUser === activeChatUser ? 'bg-blue2' : ''}`}
                                     onClick={() => setActiveChatUser(chatUser)}
                                 >
                                     {chatUser}

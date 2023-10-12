@@ -152,7 +152,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-blue5 flex justify-between items-center p-4 relative">
+    <div className="bg-gradient-to-r from-grey1 to-grey4 flex justify-between items-center p-4 relative">
       {/* Left Section (Search Bar) */}
       <div className="flex items-center relative search-bar">
         {/* Search Bar */}
