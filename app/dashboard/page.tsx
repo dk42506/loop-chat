@@ -136,7 +136,12 @@ export default function Dashboard() {
                             {chats.map((chatUser, index) => (
                                 <li 
                                     key={index} 
-                                    className={`text-white text-lg border-t border-blue5 pt-4 ${chatUser === activeChatUser ? 'bg-blue2' : ''}`}
+                                    className={`
+                                        text-white text-lg border-t border-blue5 pt-4 pb-4 pl-2 pr-2
+                                        cursor-pointer
+                                        transition-all duration-200
+                                        ${chatUser === activeChatUser ? 'bg-blue2' : 'hover:bg-blue2 hover:shadow-md'}
+                                    `}
                                     onClick={() => setActiveChatUser(chatUser)}
                                 >
                                     {chatUser}
