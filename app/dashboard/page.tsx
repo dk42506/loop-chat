@@ -131,7 +131,7 @@ export default function Dashboard() {
                 {/* Chat Container */}
                 <div className="flex-grow flex">
                     {/* Previous Chats (Left Panel) */}
-                    <div className="bg-grey2 w-1/4 p-4 border-grey3 rounded-lg shadow-md">
+                    <div className="bg-grey2 w-1/4 p-4 shadow-md">
                         <ul className="space-y-2">
                             {chats.map((chatUser, index) => (
                                 <li 
