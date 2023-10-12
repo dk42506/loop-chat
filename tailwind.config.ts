@@ -9,12 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'blue1': '#00b8ff',
-        'blue2': 	'#009bd6',
-        'blue3': '#00719c',
-        'blue4': '#00415a',
-        'blue5': '#001f2b',
+        'cream': '#f5e7bc',
+        'grey1': '#f5f5f5',
+        'grey2': '#e0e0e0',
+        'grey3': '#b0b0b0',
+        'grey4': '#505050',
+        'black1': '#1f1f1f',
       },
+      backgroundImage: {
+        'grey-gradient': 'linear-gradient(to right, #f5f5f5, #b0b0b0)',
+        'cream-gradient': 'linear-gradient(to right, #f5e7bc, #f5f5f5)',
+      }
     },
   },
   plugins: [],

@@ -133,7 +133,7 @@ export default function Home() {
   };
   
   return (
-    <div className="bg-blue4 text-white min-h-screen flex items-center justify-center">
+    <div className="bg-gradient-to-r from-cream to-grey1 text-black1 min-h-screen flex items-center justify-center">
       <motion.div
         initial="initial"
         animate="animate"
