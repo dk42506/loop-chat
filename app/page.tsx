@@ -184,13 +184,14 @@ export default function Home() {
                 />
               </div>
               {loginError && <p className="text-red-500">{loginError}</p>}
-              <button
+              <motion.button
                 type="submit"
-                className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                className="slide-btn slide-btn-vibrant2 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                 onClick={handleSignIn}
+                whileHover={{ scale: 1.05 }}
               >
                 Log In
-              </button>
+            </motion.button>
             </form>
             <p className="mt-4 text-blue5">
               Don't have an account?{' '}
@@ -239,13 +240,14 @@ export default function Home() {
                 />
               </div>
               {createAccountError && <p className="text-red-500">{createAccountError}</p>}
-              <button
+              <motion.button
                 type="submit"
-                className="bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-                onClick={handleCreateAccount}
+                className="slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                onClick={handleSignIn}
+                whileHover={{ scale: 1.05 }}
               >
                 Create Account
-              </button>
+              </motion.button>
             </form>
             <p className="mt-4 text-black">
               Already have an account?{' '}

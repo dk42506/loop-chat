@@ -189,8 +189,9 @@ export default function Navbar() {
       <div className="flex items-center">
           <span className="mr-6 text-lg font-bold text-black">{username}</span>
           {/* Sign Out Button */}
-          <button
+          <motion.button
             className="slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+            whileHover={{ scale: 1.05 }}
             onClick={() => {
               signOut(auth).then(() => {
                 // Sign-out successful.
@@ -200,7 +201,7 @@ export default function Navbar() {
             }}
           >
             Sign Out
-          </button>
+          </motion.button>
       </div>
     </div>
   );
