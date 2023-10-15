@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
 import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc } from 'firebase/firestore';
@@ -17,6 +17,8 @@ export default function Dashboard() {
 
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const fetchUsername = async () => {
@@ -123,6 +125,12 @@ export default function Dashboard() {
       setMessageInput('');
     };
 
+    useEffect(() => {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
+
     return (
         <PrivateRoute>
             <div className="bg-white text-black min-h-screen flex flex-col">
@@ -157,16 +165,11 @@ export default function Dashboard() {
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
-                                    className={`mb-2 ${
-                                        message.sender === currentUsername ? 'text-right' : 'text-left'
-                                    }`}
+                                    ref={index === messages.length - 1 ? lastMessageRef : null}
+                                    className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}
                                 >
                                     <div
-                                        className={`bg-grey1 text-blue5 rounded-lg px-4 py-2 ${
-                                            message.sender === currentUsername
-                                                ? 'rounded-tr-none mr-auto'
-                                                : 'rounded-tl-none ml-auto'
-                                        }`}
+                                        className={`bg-grey1 text-blue5 rounded-lg px-4 py-2 ${message.sender === currentUsername ? 'rounded-tr-none mr-auto' : 'rounded-tl-none ml-auto'}`}
                                         style={{ maxWidth: '60%', display: 'inline-block' }}
                                     >
                                         {message.text}
