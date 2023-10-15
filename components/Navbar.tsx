@@ -166,6 +166,7 @@ export default function Navbar() {
           onChange={(e) => {
             setSearchQuery(e.target.value);
           }}
+          style={{ width: '300px' }}
         />
 
         {/* Display search results */}
