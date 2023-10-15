@@ -128,7 +128,7 @@ export default function Dashboard() {
             <div className="bg-white text-black min-h-screen flex flex-col">
                 {/* Navbar */}
                 <Navbar />
-
+    
                 {/* Chat Container */}
                 <div className="flex-grow flex">
                     {/* Previous Chats (Left Panel) */}
@@ -149,11 +149,11 @@ export default function Dashboard() {
                             ))}
                         </ul>
                     </div>
-
+    
                     {/* Active Chat (Right Panel) */}
                     <div className="flex-grow p-4 flex flex-col">
                         {/* Chat Messages */}
-                        <div className="rounded-lg p-4 h-full overflow-y-auto">
+                        <div className="rounded-lg p-4 overflow-y-auto h-[710px]">
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
@@ -174,26 +174,27 @@ export default function Dashboard() {
                                 </div>
                             ))}
                         </div>
-
+    
                         {/* Chat Input */}
-                        <div className="mt-auto p-4">
+                        <div className="mt-4 p-4">
                             <div className="flex items-center">
-                            <input
-                                type="text"
-                                className="flex-grow bg-grey1 px-3 py-2 border rounded-lg text-black bg-grey1 mr-2"
-                                placeholder="Type your message..."
-                                value={messageInput}
-                                onChange={e => setMessageInput(e.target.value)}
-                                onKeyPress={e => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault();
-                                        sendMessage();
-                                    }
-                                }}
-                            />
+                                <input
+                                    type="text"
+                                    className="flex-grow bg-grey1 px-3 py-2 border rounded-lg text-black bg-grey1 mr-2"
+                                    placeholder="Type your message..."
+                                    value={messageInput}
+                                    onChange={e => setMessageInput(e.target.value)}
+                                    onKeyPress={e => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            sendMessage();
+                                        }
+                                    }}
+                                />
                                 <motion.button
                                     className="slide-btn slide-btn-vibrant2 bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
                                     whileHover={{ scale: 1.05 }}
+                                    onClick={sendMessage}
                                 >
                                     Send
                                 </motion.button>
@@ -203,5 +204,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </PrivateRoute>
-    )
+    )    
 }
