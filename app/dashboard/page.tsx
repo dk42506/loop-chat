@@ -14,6 +14,7 @@ export default function Dashboard() {
     const [activeChatUser, setActiveChatUser] = useState<string | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [messageInput, setMessageInput] = useState<string>('');
+    const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -126,10 +127,10 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        if (lastMessageRef.current) {
-            lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]);
+    if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+}, [messages]);
 
     return (
         <PrivateRoute>
@@ -161,11 +162,10 @@ export default function Dashboard() {
                     {/* Active Chat (Right Panel) */}
                     <div className="flex-grow p-4 flex flex-col">
                         {/* Chat Messages */}
-                        <div className="rounded-lg p-4 overflow-y-auto h-[55em]">
+                        <div className="rounded-lg p-4 overflow-y-auto h-[55em]" ref={messagesContainerRef}>
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
-                                    ref={index === messages.length - 1 ? lastMessageRef : null}
                                     className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}
                                 >
                                     <div
