@@ -21,19 +21,26 @@ export default function Dashboard() {
 
     const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const fetchUsername = async () => {
-            if (auth.currentUser) {
-                const userRef = collection(db, 'users');
-                const q = query(userRef, where('uid', '==', auth.currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    const fetchedUsername = querySnapshot.docs[0].data().username;
-                    setCurrentUsername(fetchedUsername);
-                }
+    const fetchUsername = async () => {
+        if (auth.currentUser) {
+            const userRef = collection(db, 'users');
+            const q = query(userRef, where('uid', '==', auth.currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                const fetchedUsername = querySnapshot.docs[0].data().username;
+                setCurrentUsername(fetchedUsername);
+                localStorage.setItem('currentUsername', fetchedUsername);  // save to localStorage
             }
-        };
-        fetchUsername();
+        }
+    };
+
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('currentUsername');
+        if (savedUsername) {
+            setCurrentUsername(savedUsername);
+        } else {
+            fetchUsername();
+        }
     }, []);
 
     useEffect(() => {
@@ -46,7 +53,7 @@ export default function Dashboard() {
             const chatUsers: string[] = [];
 
             snapshot.forEach(doc => {
-              const otherUser = doc.data().participants.find((username: string) => username !== currentUsername);
+                const otherUser = doc.data().participants.find((username: string) => username !== currentUsername);
 
                 if (otherUser) {
                     chatUsers.push(otherUser);
@@ -131,6 +138,7 @@ export default function Dashboard() {
         messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
 }, [messages]);
+
 
     return (
         <PrivateRoute>
