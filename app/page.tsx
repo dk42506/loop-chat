@@ -150,6 +150,7 @@ export default function Home() {
         >
           Get Started
         </motion.button>
+        <p>Pre-Alpha 0.0.1</p>
       </motion.div>
       <AnimatePresence>
       {showLoginForm && (
