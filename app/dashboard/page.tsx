@@ -170,7 +170,7 @@ export default function Dashboard() {
                     {/* Active Chat (Right Panel) */}
                     <div className="flex-grow p-4 flex flex-col">
                         {/* Chat Messages */}
-                        <div className="rounded-lg p-4 overflow-y-auto h-[45em]" ref={messagesContainerRef}>
+                        <div className="rounded-lg p-4 overflow-y-auto flex-grow" style={{ flex: 1 }} ref={messagesContainerRef}>
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
