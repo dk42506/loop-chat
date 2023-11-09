@@ -244,7 +244,7 @@ export default function Home() {
               <motion.button
                 type="submit"
                 className="slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-                onClick={handleSignIn}
+                onClick={handleCreateAccount}
                 whileHover={{ scale: 1.05 }}
               >
                 Create Account
