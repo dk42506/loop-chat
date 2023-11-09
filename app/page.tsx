@@ -128,7 +128,7 @@ export default function Home() {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      setLoginError(errorMessage);
+      setLoginError("Incorrect Username or Password");
     });
   };
   
