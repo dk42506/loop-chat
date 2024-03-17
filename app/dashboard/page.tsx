@@ -142,78 +142,49 @@ export default function Dashboard() {
 
     return (
         <PrivateRoute>
-            <div className="bg-white text-black min-h-screen flex flex-col">
-                {/* Navbar */}
+            <div className="flex flex-col min-h-screen bg-white text-black">
                 <Navbar />
-    
-                {/* Chat Container */}
-                <div className="flex-grow flex">
-                    {/* Previous Chats (Left Panel) */}
-                    <div className="bg-grey2 w-1/4 p-4 shadow-md">
+
+                <div className="flex flex-1 overflow-hidden">
+                    <div className="hidden md:block md:w-1/4 lg:w-1/5 p-4 overflow-y-auto shadow-md">
                         <ul className="space-y-2">
                             {chats.map((chatUser, index) => (
-                                <li 
-                                    key={index} 
-                                    className={`
-                                        border-b border-black text-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center 
-                                        cursor-pointer transition-all duration-300 transform
-                                        ${chatUser === activeChatUser ? 'bg-vibrant3' : 'hover:bg-grey2 hover:shadow-lg slide-btn slide-btn-vibrant3'}
-                                    `}
-                                    onClick={() => setActiveChatUser(chatUser)}
-                                >
-                                    <span>{chatUser}</span>
+                                <li key={index} onClick={() => setActiveChatUser(chatUser)}
+                                    className={`border-b border-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center cursor-pointer transition duration-300 transform ${chatUser === activeChatUser ? 'bg-vibrant1' : 'hover:bg-grey2'}`}>
+                                    {chatUser}
                                 </li>
                             ))}
                         </ul>
                     </div>
-    
-                    {/* Active Chat (Right Panel) */}
-                    <div className="flex-grow p-4 flex flex-col">
-                        {/* Chat Messages */}
-                        <div className="rounded-lg p-4 overflow-y-auto h-[45em]" ref={messagesContainerRef}>
-                            {messages.map((message, index) => (
-                                <div
-                                    key={index}
-                                    className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}
-                                >
-                                    <div
-                                        className={`bg-grey1 text-blue5 rounded-lg px-4 py-2 ${message.sender === currentUsername ? 'rounded-tr-none mr-auto' : 'rounded-tl-none ml-auto'}`}
-                                        style={{ maxWidth: '60%', display: 'inline-block' }}
-                                    >
-                                        {message.text}
+
+                    <div className="flex-1 flex flex-col p-4">
+                        <div className="flex flex-col flex-grow relative">
+                            <div className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
+                                {messages.map((message, index) => (
+                                    <div key={index} className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}>
+                                        <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-vibrant2 rounded-br-none' : 'bg-grey1 rounded-bl-none'}`}>
+                                            {message.text}
+                                        </div>
                                     </div>
+                                ))}
+                            </div>
+
+                            <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t">
+                                <div className="flex items-center">
+                                    <input type="text" className="flex-grow bg-grey1 px-3 py-2 border rounded-lg mr-2"
+                                        placeholder="Type your message..." value={messageInput}
+                                        onChange={e => setMessageInput(e.target.value)}
+                                        onKeyPress={e => e.key === 'Enter' && sendMessage()} />
+                                    <motion.button whileHover={{ scale: 1.05 }} onClick={sendMessage}
+                                                className="bg-vibrant3 text-white px-4 py-2 rounded-lg hover:bg-opacity-80">
+                                        Send
+                                    </motion.button>
                                 </div>
-                            ))}
-                        </div>
-    
-                        {/* Chat Input */}
-                        <div className="mt-4 p-4">
-                            <div className="flex items-center">
-                                <input
-                                    type="text"
-                                    className="flex-grow bg-grey1 px-3 py-2 border rounded-lg text-black bg-grey1 mr-2"
-                                    placeholder="Type your message..."
-                                    value={messageInput}
-                                    onChange={e => setMessageInput(e.target.value)}
-                                    onKeyPress={e => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            sendMessage();
-                                        }
-                                    }}
-                                />
-                                <motion.button
-                                    className="slide-btn slide-btn-vibrant2 bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-                                    whileHover={{ scale: 1.05 }}
-                                    onClick={sendMessage}
-                                >
-                                    Send
-                                </motion.button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </PrivateRoute>
-    )    
+    );
 }
