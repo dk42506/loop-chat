@@ -4,44 +4,53 @@ import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
 import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from '../../components/firebase';
 import { motion } from 'framer-motion';
+
+interface Message {
+    text: string;
+    sender: string;
+}
 
 export default function Dashboard() {
     const [chats, setChats] = useState<string[]>([]);
     const [currentUsername, setCurrentUsername] = useState<string | null>(null);
     const [activeChatUser, setActiveChatUser] = useState<string | null>(null);
-    const [messages, setMessages] = useState<any[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [messageInput, setMessageInput] = useState<string>('');
-    const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const lastMessageRef = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, user => {
+            if (user) {
+                fetchUsername();
+            } else {
+                resetState();
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+    const resetState = () => {
+        setChats([]);
+        setCurrentUsername(null);
+        setActiveChatUser(null);
+        setMessages([]);
+    };
 
     const fetchUsername = async () => {
         if (auth.currentUser) {
             const userRef = collection(db, 'users');
             const q = query(userRef, where('uid', '==', auth.currentUser.uid));
             const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-                const fetchedUsername = querySnapshot.docs[0].data().username;
-                setCurrentUsername(fetchedUsername);
-                localStorage.setItem('currentUsername', fetchedUsername);  // save to localStorage
-            }
+            const fetchedUsername = querySnapshot.docs[0]?.data().username as string | undefined;
+            setCurrentUsername(fetchedUsername || null);
         }
     };
-
-    useEffect(() => {
-        const savedUsername = localStorage.getItem('currentUsername');
-        if (savedUsername) {
-            setCurrentUsername(savedUsername);
-        } else {
-            fetchUsername();
-        }
-    }, []);
 
     useEffect(() => {
         if (!currentUsername) return;
@@ -50,15 +59,9 @@ export default function Dashboard() {
         const q = query(chatsRef, where('participants', 'array-contains', currentUsername));
 
         const unsubscribe = onSnapshot(q, snapshot => {
-            const chatUsers: string[] = [];
-
-            snapshot.forEach(doc => {
-                const otherUser = doc.data().participants.find((username: string) => username !== currentUsername);
-
-                if (otherUser) {
-                    chatUsers.push(otherUser);
-                }
-            });
+            const chatUsers = snapshot.docs.map(doc => 
+                doc.data().participants.find((username: string) => username !== currentUsername) as string
+            ).filter(Boolean); // filter out undefined values
 
             setChats(chatUsers);
         });
@@ -67,77 +70,41 @@ export default function Dashboard() {
     }, [currentUsername]);
 
     useEffect(() => {
-      if (!currentUsername || !activeChatUser) return;
-  
-      const chatsRef = collection(db, 'chats');
-      const q1 = query(chatsRef, where('participants', '==', [currentUsername, activeChatUser]));
-      const q2 = query(chatsRef, where('participants', '==', [activeChatUser, currentUsername]));
-  
-      const fetchMessages = async () => {
-          const chatSnapshot1 = await getDocs(q1);
-          const chatSnapshot2 = await getDocs(q2);
-          
-          if (!chatSnapshot1.empty) {
-              setMessages(chatSnapshot1.docs[0].data().messages || []);
-          } else if (!chatSnapshot2.empty) {
-              setMessages(chatSnapshot2.docs[0].data().messages || []);
-          }
-      };
-  
-      fetchMessages();
-  
-      const unsubscribe1 = onSnapshot(q1, snapshot => {
-          if (!snapshot.empty) {
-              setMessages(snapshot.docs[0].data().messages || []);
-          }
-      });
-  
-      const unsubscribe2 = onSnapshot(q2, snapshot => {
-          if (!snapshot.empty) {
-              setMessages(snapshot.docs[0].data().messages || []);
-          }
-      });
-  
-      return () => {
-          unsubscribe1();
-          unsubscribe2();
-      };
+        if (!currentUsername || !activeChatUser) return;
+
+        const fetchMessages = async () => {
+            const chatsRef = collection(db, 'chats');
+            const q = query(chatsRef, where('participants', 'in', [[currentUsername, activeChatUser], [activeChatUser, currentUsername]]));
+
+            const unsubscribe = onSnapshot(q, snapshot => {
+                snapshot.forEach(doc => {
+                    const messages = doc.data().messages as Message[];
+                    setMessages(messages || []);
+                });
+            });
+
+            return () => unsubscribe();
+        };
+
+        fetchMessages();
     }, [currentUsername, activeChatUser]);
 
     const sendMessage = async () => {
-      if (!messageInput.trim()) return;
-  
-      const chatsRef = collection(db, 'chats');
-      const q1 = query(chatsRef, where('participants', '==', [currentUsername, activeChatUser]));
-      const q2 = query(chatsRef, where('participants', '==', [activeChatUser, currentUsername]));
-  
-      const chatSnapshot1 = await getDocs(q1);
-      const chatSnapshot2 = await getDocs(q2);
-  
-      let chatDoc;
-      if (!chatSnapshot1.empty) {
-          chatDoc = chatSnapshot1.docs[0];
-      } else if (!chatSnapshot2.empty) {
-          chatDoc = chatSnapshot2.docs[0];
-      } else {
-          return;
-      }
-  
-      const updatedMessages = [...chatDoc.data().messages, {
-          text: messageInput,
-          sender: currentUsername
-      }];
-  
-      await updateDoc(doc(db, 'chats', chatDoc.id), { messages: updatedMessages });
-  
-      setMessageInput('');
-    };
+        if (!messageInput.trim()) return;
 
-    useEffect(() => {
-    if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-    }
-}, [messages]);
+        const updatedMessages = [...messages, { text: messageInput, sender: currentUsername! }];
+
+        const chatsRef = collection(db, 'chats');
+        const q = query(chatsRef, where('participants', 'in', [[currentUsername, activeChatUser], [activeChatUser, currentUsername]]));
+
+        getDocs(q).then(snapshot => {
+            snapshot.forEach(async docSnapshot => {
+                await updateDoc(doc(db, 'chats', docSnapshot.id), { messages: updatedMessages });
+            });
+        });
+
+        setMessageInput('');
+    };
 
 
     return (
