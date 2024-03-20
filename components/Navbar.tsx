@@ -136,17 +136,16 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
   }, []);
 
   return (
-    <div className="navbar bg-grey1 flex justify-between items-center p-4 relative border-b border-black z-10">
-      <div className="search-section flex items-center relative w-full">
-
+    <div className="navbar bg-grey-100 flex justify-between items-center p-4 relative border-b border-black z-30">
+      <div className="search-section flex items-center relative w-1/3"> {/* Adjust the width as needed */}
         <input
           type="text"
-          className="search-input px-3 py-2 border rounded-lg text-black bg-grey2"
+          className="search-input form-input px-4 py-2 w-full rounded-lg text-black border-gray-300 shadow-sm"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-
+  
         <AnimatePresence mode="wait">
           {searchResults.length > 0 && (
             <motion.ul
@@ -154,14 +153,14 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="search-results"
-              // Additional styles or classes might be needed for positioning
+              transition={{ duration: 0.2 }}
+              className="search-results absolute top-full mt-1 w-full bg-white shadow-lg z-40 rounded-md overflow-hidden" // Ensure this z-index is higher than the chat panel's
+              // Tailwind classes for absolute positioning and styling
             >
               {searchResults.map((result, index) => (
                 <motion.li 
                   key={index} 
-                  className="py-2 px-4 hover:bg-vibrant2 hover:text-white cursor-pointer inline-block"
+                  className="py-2 px-4 hover:bg-blue-500 hover:text-white cursor-pointer transition ease-in-out duration-150"
                   onClick={() => handleNewChat(result)}
                   whileHover={{ scale: 1.05 }}
                 >
