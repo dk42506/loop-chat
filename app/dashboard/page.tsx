@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
 import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc, orderBy } from 'firebase/firestore';
@@ -19,44 +19,21 @@ export default function Dashboard() {
     const [activeChatUser, setActiveChatUser] = useState<string | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageInput, setMessageInput] = useState<string>('');
-    const messageContainerRef = useRef<HTMLDivElement>(null); // Move useRef inside the component
+    const messageContainerRef = useRef<HTMLDivElement>(null);
     const [isChatOpen, setIsChatOpen] = useState(false);
-
-    const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const adjustScrollToBottom = () => {
+    // Adjusting scroll to bottom functionality
+    const adjustScrollToBottom = useCallback(() => {
         if (messageContainerRef.current) {
             messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
         }
-    };
+    }, []);
 
-    useEffect(() => {
-        adjustScrollToBottom();
-    }, [messages, activeChatUser]);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
-            if (user) {
-                fetchUsername();
-            } else {
-                resetState();
-            }
-        });
-
-        return () => unsubscribe();
-    }, [auth]);
-
-    const resetState = () => {
-        setChats([]);
-        setCurrentUsername(null);
-        setActiveChatUser(null);
-        setMessages([]);
-    };
-
-    const fetchUsername = async () => {
+    // Fetching username functionality
+    const fetchUsername = useCallback(async () => {
         if (auth.currentUser) {
             const userRef = collection(db, 'users');
             const q = query(userRef, where('uid', '==', auth.currentUser.uid));
@@ -64,8 +41,30 @@ export default function Dashboard() {
             const fetchedUsername = querySnapshot.docs[0]?.data().username as string | undefined;
             setCurrentUsername(fetchedUsername || null);
         }
-    };
+    }, [auth.currentUser, db]);
 
+    // Adjust scroll when messages or active chat user changes
+    useEffect(() => {
+        adjustScrollToBottom();
+    }, [messages, activeChatUser, adjustScrollToBottom]);
+
+    // Listen to auth state changes
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, user => {
+            if (user) {
+                fetchUsername();
+            } else {
+                setCurrentUsername(null);
+                setChats([]);
+                setActiveChatUser(null);
+                setMessages([]);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth, fetchUsername]);
+
+    // Fetch chats
     useEffect(() => {
         if (!currentUsername) return;
     
@@ -76,7 +75,7 @@ export default function Dashboard() {
             const chatUsers = snapshot.docs.map(doc => ({
                 username: doc.data().participants.find((username: string) => username !== currentUsername),
                 lastUpdated: doc.data().lastUpdated?.toDate(),
-            })).filter(user => user.username); // filter out undefined values
+            })).filter(user => user.username); // Filter out undefined values
     
             setChats(chatUsers.map(user => user.username));
         });
@@ -84,26 +83,24 @@ export default function Dashboard() {
         return () => unsubscribe();
     }, [currentUsername, db]);
 
+    // Fetch messages
     useEffect(() => {
         if (!currentUsername || !activeChatUser) return;
 
-        const fetchMessages = async () => {
-            const chatsRef = collection(db, 'chats');
-            const q = query(chatsRef, where('participants', 'in', [[currentUsername, activeChatUser], [activeChatUser, currentUsername]]));
+        const chatsRef = collection(db, 'chats');
+        const q = query(chatsRef, where('participants', 'in', [[currentUsername, activeChatUser], [activeChatUser, currentUsername]]));
 
-            const unsubscribe = onSnapshot(q, snapshot => {
-                snapshot.forEach(doc => {
-                    const messages = doc.data().messages as Message[];
-                    setMessages(messages || []);
-                });
+        const unsubscribe = onSnapshot(q, snapshot => {
+            snapshot.forEach(doc => {
+                const messages = doc.data().messages as Message[];
+                setMessages(messages || []);
             });
+        });
 
-            return () => unsubscribe();
-        };
+        return () => unsubscribe();
+    }, [currentUsername, activeChatUser, db]);
 
-        fetchMessages();
-    }, [currentUsername, activeChatUser]);
-
+    // Send message
     const sendMessage = async () => {
         if (!messageInput.trim()) return;
     
@@ -115,7 +112,7 @@ export default function Dashboard() {
             snapshot.forEach(async docSnapshot => {
                 await updateDoc(doc(db, 'chats', docSnapshot.id), { 
                     messages: updatedMessages,
-                    lastUpdated: new Date() // update the timestamp
+                    lastUpdated: new Date() // Update the timestamp
                 });
             });
         });
@@ -123,6 +120,8 @@ export default function Dashboard() {
         setMessageInput('');
     };
 
+    // Toggle chat functionality
+    const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     return (
         <PrivateRoute>

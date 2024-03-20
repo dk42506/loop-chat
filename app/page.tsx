@@ -194,7 +194,7 @@ export default function Home() {
             </motion.button>
             </form>
             <p className="mt-4 text-blue5">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <a className="text-blue3 hover:underline cursor-pointer" onClick={handleDontHaveAccount}>Create Account</a>
             </p>
           </motion.div>
