@@ -131,7 +131,7 @@ export default function Dashboard() {
                         <ul className="space-y-2">
                             {chats.map((chatUser, index) => (
                                 <li key={index} onClick={() => setActiveChatUser(chatUser)}
-                                    className={`border-b border-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center cursor-pointer transition duration-300 transform ${chatUser === activeChatUser ? 'bg-vibrant1' : 'hover:bg-grey2'}`}>
+                                    className={`border-b border-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center cursor-pointer transition duration-300 transform ${chatUser === activeChatUser ? 'bg-grey3' : 'hover:bg-grey2'}`}>
                                     {chatUser}
                                 </li>
                             ))}
@@ -143,7 +143,7 @@ export default function Dashboard() {
                             <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
                                 {messages.map((message, index) => (
                                     <div key={index} className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}>
-                                        <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-vibrant2 rounded-br-none' : 'bg-grey1 rounded-bl-none'}`}>
+                                        <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-grey2 rounded-br-none' : 'bg-grey2 rounded-bl-none'}`}>
                                             {message.text}
                                         </div>
                                     </div>
@@ -156,8 +156,11 @@ export default function Dashboard() {
                                         placeholder="Type your message..." value={messageInput}
                                         onChange={e => setMessageInput(e.target.value)}
                                         onKeyPress={e => e.key === 'Enter' && sendMessage()} />
-                                    <motion.button whileHover={{ scale: 1.05 }} onClick={sendMessage}
-                                                className="bg-vibrant3 text-white px-4 py-2 rounded-lg hover:bg-opacity-80">
+                                    <motion.button
+                                    onClick={sendMessage}  
+                                    className="slide-btn slide-btn-vibrant3 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+                                    whileHover={{ scale: 1.05 }}
+                                    >
                                         Send
                                     </motion.button>
                                 </div>
