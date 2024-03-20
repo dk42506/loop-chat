@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import Video from '@/components/Video';
 
 export default function Home() {
   const router = useRouter();
@@ -41,19 +42,14 @@ export default function Home() {
           <div className="lg:w-1/2">
             <h2 className="text-3xl font-bold text-black mb-4">Loop Chat</h2>
             <p className="text-grey-600 text-lg">
-            
-Loop Chat offers a clear window into the core design of major corporate messaging apps. It's crafted to showcase the essential framework that powers these platforms, providing a straightforward, insightful look at how they operate.
+              Loop Chat offers a clear window into the core design of major corporate messaging apps. It's crafted to showcase the essential framework that powers these platforms, providing a straightforward, insightful look at how they operate.
             </p>
           </div>
 
           {/* Image/Video Section */}
           <div className="lg:w-1/2 flex justify-center">
-          <video className="w-full" autoPlay loop muted playsInline>
-            <source src="videos/demo.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            <Video />
           </div>
-
         </div>
       </div>
 
