@@ -31,7 +31,7 @@ export default function Home() {
         <div className="text-center p-10">
           <Image src="/images/logo.svg" alt="Loop Chat" width={500} height={500} className="mx-auto h-auto" />
           <h1 className="text-4xl font-bold text-black mt-5 mb-3">Connect Effortlessly</h1>
-          <p className="text-lg text-grey3">Create an account, search for users, and start chatting!</p>
+          <p className="text-lg text-grey3">Create an account&sbquo; search for users&sbquo; and start chatting!</p>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function Home() {
           <div className="lg:w-1/2">
             <h2 className="text-3xl font-bold text-black mb-4">Loop Chat</h2>
             <p className="text-grey-600 text-lg">
-              Loop Chat offers a clear window into the core design of major corporate messaging apps. It's crafted to showcase the essential framework that powers these platforms, providing a straightforward, insightful look at how they operate.
+              Loop Chat offers a clear window into the core design of major corporate messaging apps. It&apos;s crafted to showcase the essential framework that powers these platforms&sbquo; providing a straightforward&sbquo; insightful look at how they operate.
             </p>
           </div>
 

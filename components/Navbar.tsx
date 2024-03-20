@@ -121,6 +121,7 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
     }).then(() => {
       console.log("Chat created successfully");
       onChatCreated(selectedUser);
+      setSearchResults([]);
     }).catch((error) => {
       console.error("Error creating chat:", error);
     });
@@ -153,7 +154,7 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
       <div className="search-section flex items-center relative w-1/3"> {/* Adjust the width as needed */}
         <input
           type="text"
-          className="search-input form-input px-4 py-2 w-full rounded-lg text-black border-gray-300 shadow-sm"
+          className="search-input form-input px-4 py-2 w-full rounded-lg text-black border-grey2 shadow-sm bg-grey1"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

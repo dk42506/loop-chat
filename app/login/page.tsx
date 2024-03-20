@@ -195,7 +195,9 @@ export default function Login() {
             </form>
             <p className="mt-4 text-blue5">
               Don&apos;t have an account?{' '}
-              <a className="text-blue3 hover:underline cursor-pointer" onClick={handleDontHaveAccount}>Create Account</a>
+              <a className="text-blue-500 hover:underline cursor-pointer" onClick={handleDontHaveAccount}>
+                Create Account
+              </a>
             </p>
           </motion.div>
         )}
@@ -251,7 +253,7 @@ export default function Login() {
             </form>
             <p className="mt-4 text-black">
               Already have an account?{' '}
-              <a className="text-black hover:underline cursor-pointer" onClick={handleGetStarted}>
+              <a className="text-blue-500 hover:underline cursor-pointer" onClick={handleGetStarted}>
                 Log In
               </a>
             </p>
