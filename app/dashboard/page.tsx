@@ -20,6 +20,9 @@ export default function Dashboard() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageInput, setMessageInput] = useState<string>('');
     const messageContainerRef = useRef<HTMLDivElement>(null); // Move useRef inside the component
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const toggleChat = () => setIsChatOpen(!isChatOpen);
 
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -125,41 +128,68 @@ export default function Dashboard() {
         <PrivateRoute>
             <div className="flex flex-col min-h-screen bg-white text-black">
                 <Navbar />
-
+    
                 <div className="flex flex-1 overflow-hidden">
-                    <div className="hidden md:block md:w-1/4 lg:w-1/5 p-4 overflow-y-auto shadow-md">
-                        <ul className="space-y-2">
+                    {/* Arrow button for toggling chat panel visibility, only visible in mobile */}
+                    <div 
+                        className={`fixed left-0 top-1/2 z-30 transform -translate-y-1/2 cursor-pointer p-2 bg-gray-200 pt-10 pb-10 ${isChatOpen ? 'bg-opacity-80' : 'bg-opacity-50'} rounded-r md:hidden`}
+                        onClick={toggleChat}
+                        style={{ transition: 'transform 0.3s, background-color 0.3s' }}
+                    >
+                        <svg
+                            className={`h-6 w-6 text-gray-600 transform ${isChatOpen ? 'rotate-180' : 'rotate-0'}`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            style={{ transition: 'transform 0.3s' }}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+    
+                    {/* Chat panel */}
+                    <div className={`chat-panel transition-transform ${isChatOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-20 w-full max-w-xs bg-white shadow-lg overflow-y-auto md:static md:translate-x-0 md:max-w-full md:w-1/4 lg:w-1/5`}>
+                        <ul className="space-y-2 p-4">
                             {chats.map((chatUser, index) => (
-                                <li key={index} onClick={() => setActiveChatUser(chatUser)}
-                                    className={`border-b border-black text-lg pt-4 pb-4 pl-2 pr-2 flex justify-between items-center cursor-pointer transition duration-300 transform ${chatUser === activeChatUser ? 'bg-grey3' : 'hover:bg-grey2'}`}>
+                                <li key={index} 
+                                    onClick={() => {
+                                        setActiveChatUser(chatUser);
+                                        setIsChatOpen(false); // Close the panel when a chat is selected
+                                    }}
+                                    className={`border-b border-gray-300 text-lg p-4 flex justify-between items-center cursor-pointer transition-colors duration-300 ${chatUser === activeChatUser ? 'bg-gray-200' : 'hover:bg-gray-100'}`}>
                                     {chatUser}
                                 </li>
                             ))}
                         </ul>
                     </div>
-
+    
+                    {/* Main content area */}
                     <div className="flex-1 flex flex-col p-4">
                         <div className="flex flex-col flex-grow relative">
                             <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
                                 {messages.map((message, index) => (
                                     <div key={index} className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}>
-                                        <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-grey2 rounded-br-none' : 'bg-grey2 rounded-bl-none'}`}>
+                                        <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-blue-100' : 'bg-gray-100'}`}>
                                             {message.text}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-
+    
                             <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t">
                                 <div className="flex items-center">
-                                    <input type="text" className="flex-grow bg-grey1 px-3 py-2 border rounded-lg mr-2"
-                                        placeholder="Type your message..." value={messageInput}
+                                    <input 
+                                        type="text" 
+                                        className="flex-grow bg-gray-100 px-3 py-2 border rounded-lg mr-2" 
+                                        placeholder="Type your message..." 
+                                        value={messageInput}
                                         onChange={e => setMessageInput(e.target.value)}
-                                        onKeyPress={e => e.key === 'Enter' && sendMessage()} />
+                                        onKeyPress={e => e.key === 'Enter' && sendMessage()} 
+                                    />
                                     <motion.button
-                                    onClick={sendMessage}  
-                                    className="slide-btn slide-btn-vibrant3 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-                                    whileHover={{ scale: 1.05 }}
+                                        onClick={sendMessage}
+                                        className="bg-grey2 px-4 py-2 rounded-lg hover:bg-blue-600"
+                                        whileHover={{ scale: 1.05 }}
                                     >
                                         Send
                                     </motion.button>
@@ -170,5 +200,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </PrivateRoute>
-    );
-}
+    );    
+}    

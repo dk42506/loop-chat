@@ -66,4 +66,21 @@
   .sign-out-button {
     margin-top: 10px;
   }
+
+  .chat-panel {
+    display: block; /* Make sure the chat panel is visible */
+    width: 100%; /* Full width */
+    height: auto; /* Adjust height as needed */
+    position: fixed; /* Fixed position to stay in view */
+    bottom: 0; /* Align to the bottom of the viewport */
+    z-index: 10; /* Ensure it's above other content */
+  }
+
+  .open-chat-btn {
+    display: block; /* Show the button to open chat */
+    position: fixed; /* Fixed position to make it always accessible */
+    bottom: 20px; /* Position it at the bottom */
+    right: 20px; /* Position it to the right */
+    z-index: 11; /* Above the chat panel */
+  }
 }
