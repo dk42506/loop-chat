@@ -19,9 +19,20 @@ export default function Dashboard() {
     const [activeChatUser, setActiveChatUser] = useState<string | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageInput, setMessageInput] = useState<string>('');
+    const messageContainerRef = useRef<HTMLDivElement>(null); // Move useRef inside the component
 
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    const adjustScrollToBottom = () => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    };
+
+    useEffect(() => {
+        adjustScrollToBottom();
+    }, [messages, activeChatUser]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -129,7 +140,7 @@ export default function Dashboard() {
 
                     <div className="flex-1 flex flex-col p-4">
                         <div className="flex flex-col flex-grow relative">
-                            <div className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
+                            <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
                                 {messages.map((message, index) => (
                                     <div key={index} className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}>
                                         <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-vibrant2 rounded-br-none' : 'bg-grey1 rounded-bl-none'}`}>
