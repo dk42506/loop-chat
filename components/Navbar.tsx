@@ -7,7 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export default function Navbar() {
+interface NavbarProps {
+  onChatCreated: (username: string) => void;
+}
+
+export default function Navbar({ onChatCreated }: NavbarProps) {
 
   const [username, setUsername] = useState<string | null>(null);
   const [activeUserUsername, setActiveUserUsername] = useState<string | null>(null);
@@ -126,6 +130,7 @@ export default function Navbar() {
       lastUpdated: new Date() // set the current timestamp
     }).then(() => {
         console.log("Chat created successfully");
+        onChatCreated(selectedUser);
     }).catch((error) => {
         console.error("Error creating chat:", error);
     });

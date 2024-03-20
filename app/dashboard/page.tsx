@@ -123,10 +123,15 @@ export default function Dashboard() {
     // Toggle chat functionality
     const toggleChat = () => setIsChatOpen(!isChatOpen);
 
+    const handleNewChatCreated = (chatUser: string) => {
+        setActiveChatUser(chatUser);
+        setIsChatOpen(true);
+    };
+
     return (
         <PrivateRoute>
             <div className="flex flex-col min-h-screen bg-white text-black">
-                <Navbar />
+                <Navbar onChatCreated={handleNewChatCreated} />
     
                 <div className="flex flex-1 overflow-hidden">
                     {/* Arrow button for toggling chat panel visibility, only visible in mobile */}
