@@ -154,23 +154,17 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="bg-grey1 flex justify-between items-center p-4 relative border-b border-black z-10">
-      {/* Left Section (Search Bar) */}
-      <div className="flex items-center relative search-bar">
+    <div className="navbar bg-grey1 flex justify-between items-center p-4 relative border-b border-black z-10">
+      <div className="search-section flex items-center relative w-full">
 
-        {/* Search Bar */}
         <input
           type="text"
-          className="px-3 py-2 border rounded-lg text-black bg-grey2 mr-2"
+          className="search-input px-3 py-2 border rounded-lg text-black bg-grey2"
           placeholder="Search..."
           value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-          }}
-          style={{ width: '300px' }}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        {/* Display search results */}
         <AnimatePresence mode="wait">
           {searchResults.length > 0 && (
             <motion.ul
@@ -179,7 +173,8 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center bg-grey2 border-l border-gray-200 rounded-lg shadow-lg space-x-4"
+              className="search-results"
+              // Additional styles or classes might be needed for positioning
             >
               {searchResults.map((result, index) => (
                 <motion.li 
@@ -197,22 +192,15 @@ export default function Navbar() {
       </div>
 
       {/* Right Section (Username & Sign Out Button) */}
-      <div className="flex items-center">
-          <span className="mr-6 text-lg font-bold text-black">{username}</span>
-          {/* Sign Out Button */}
-          <motion.button
-            className="slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
-            whileHover={{ scale: 1.05 }}
-            onClick={() => {
-              signOut(auth).then(() => {
-                // Sign-out successful.
-              }).catch((error) => {
-                // An error happened.
-              });
-            }}
-          >
-            Sign Out
-          </motion.button>
+      <div className="user-section flex items-center justify-end w-full">
+        <span className="username mr-6 text-lg font-bold text-black">{username}</span>
+        <motion.button
+          className="sign-out-button slide-btn slide-btn-vibrant1 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+          whileHover={{ scale: 1.05 }}
+          onClick={() => signOut(auth)}
+        >
+          Sign Out
+        </motion.button>
       </div>
     </div>
   );

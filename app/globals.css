@@ -1,28 +1,69 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-.custom-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  .custom-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+    }
+    
+    .custom-scroll::-webkit-scrollbar {
+      width: 12px;
+    }
+    
+    .custom-scroll::-webkit-scrollbar-track {
+      background: var(--scroll-track); /* Track color */
+      border-radius: 10px;
+    }
+    
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: var(--scroll-thumb); /* Thumb color */
+      border-radius: 10px;
+      border: 3px solid var(--scroll-track);
+    }
+    
+    :root {
+      --scroll-thumb: #c1c1c1; /* Modern light grey for the thumb */
+      --scroll-track: #f0f0f0; /* Light background for the track */
+    }
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Keeps the navbar positioned contextually */
   }
-  
-  .custom-scroll::-webkit-scrollbar {
-    width: 12px;
+
+  .search-section, .user-section {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
   }
-  
-  .custom-scroll::-webkit-scrollbar-track {
-    background: var(--scroll-track); /* Track color */
-    border-radius: 10px;
+
+  .search-input {
+    width: 90%;
+    max-width: 350px;
   }
-  
-  .custom-scroll::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-thumb); /* Thumb color */
-    border-radius: 10px;
-    border: 3px solid var(--scroll-track);
+
+  .search-results {
+    position: absolute; /* Position it absolutely relative to the navbar */
+    top: 100%; /* Push down to sit below the navbar */
+    left: 0; /* Align to the left edge of the navbar */
+    width: 100%; /* Span the full width */
+    background: white; /* Or any other background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 8px 8px;
+    overflow-y: auto;
+    max-height: 300px;
+    z-index: 5;
   }
-  
-  :root {
-    --scroll-thumb: #c1c1c1; /* Modern light grey for the thumb */
-    --scroll-track: #f0f0f0; /* Light background for the track */
+
+  .username {
+    display: block;
+    margin-top: 10px;
   }
+
+  .sign-out-button {
+    margin-top: 10px;
+  }
+}
