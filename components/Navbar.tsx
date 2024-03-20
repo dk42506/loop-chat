@@ -97,7 +97,20 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
       return;
     }
   
-    const participants = [activeUserUsername, selectedUser];
+    // Define the participants and sort them to maintain consistency in how they're stored
+    const participants = [activeUserUsername, selectedUser].sort();
+  
+    // Query to check if a chat with these participants already exists
+    const chatQuery = query(chatsRef, where('participants', '==', participants));
+  
+    const querySnapshot = await getDocs(chatQuery);
+  
+    if (!querySnapshot.empty) {
+      console.error("Chat between these users already exists");
+      // You might want to handle this case differently, maybe alert the user or switch to the existing chat
+      return;
+    }
+  
     const unreadMessages = { [activeUserUsername]: 0, [selectedUser]: 0 };
   
     addDoc(chatsRef, {

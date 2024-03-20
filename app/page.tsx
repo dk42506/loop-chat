@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
@@ -14,12 +15,13 @@ export default function Home() {
           <img src="/images/favicon.svg" alt="Loop Chat Logo" className="h-8 mr-2" />
           <span className="text-xl font-bold text-black">Loop Chat</span>
         </div>
-        <button
-          className="bg-vibrant1 text-white px-4 py-2 rounded-md hover:bg-vibrant2 transition-colors"
-          onClick={() => router.push('/login')}
+        <motion.button
+          onClick={() => router.push('/login')}  
+          className="slide-btn slide-btn-vibrant2 bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+          whileHover={{ scale: 1.05 }}
         >
-          Log In
-        </button>
+          Get Started
+        </motion.button>
       </nav>
 
       {/* Hero Section */}
@@ -32,35 +34,39 @@ export default function Home() {
       </div>
 
       {/* Product Info Section */}
-      <div className="px-4 py-16 text-center">
-        <div className="flex flex-wrap justify-center gap-10 mt-20">
-          <div className="max-w-md">
-            <img src="path/to/your/image.jpg" alt="Feature" className="w-full h-auto mb-4" />
-            <h3 className="text-2xl font-bold text-black">Instant Messaging</h3>
-            <p className="text-grey3">Send messages in real-time to anyone, anywhere, without any delay.</p>
+      <div className="px-4 py-16 text-center lg:text-left">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+
+          {/* Text Section */}
+          <div className="lg:w-1/2">
+            <h2 className="text-3xl font-bold text-black mb-4">Loop Chat</h2>
+            <p className="text-grey-600 text-lg">
+            
+Loop Chat offers a clear window into the core design of major corporate messaging apps. It's crafted to showcase the essential framework that powers these platforms, providing a straightforward, insightful look at how they operate.
+            </p>
           </div>
 
-          <div className="max-w-md">
-            <img src="path/to/your/video-thumbnail.jpg" alt="Feature" className="w-full h-auto mb-4" />
-            <video controls className="w-full">
-              <source src="path/to/your/video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <h3 className="text-2xl font-bold text-black">Live Video Calls</h3>
-            <p className="text-grey3">Connect face-to-face with friends and family using live video calls.</p>
+          {/* Image/Video Section */}
+          <div className="lg:w-1/2 flex justify-center">
+          <video className="w-full" autoPlay loop muted playsInline>
+            <source src="videos/demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
           </div>
+
         </div>
       </div>
 
       {/* Call to Action Section */}
-      <div className="bg-vibrant3 text-center p-10">
+      <div className="bg-vibrant1 text-center p-10">
         <h2 className="text-3xl font-bold text-white mb-6">Get Started with Loop Chat Today</h2>
-        <button
-          className="bg-white text-vibrant2 px-8 py-3 rounded-lg font-bold transition-colors hover:bg-grey2"
-          onClick={() => router.push('/login')}
+        <motion.button
+          onClick={() => router.push('/login')}  
+          className="slide-btn slide-btn-vibrant2 bg-grey1 text-black px-4 py-2 rounded-lg hover:bg-opacity-70"
+          whileHover={{ scale: 1.05 }}
         >
-          Sign Up Now
-        </button>
+          Get Started
+        </motion.button>
       </div>
 
       {/* Footer */}
