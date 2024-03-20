@@ -86,55 +86,32 @@ export default function Navbar({ onChatCreated }: NavbarProps) {
   const handleNewChat = async (selectedUser: string) => {
     const chatsRef = collection(db, 'chats');
     const currentUserId = auth.currentUser?.uid;
-
-    // Ensure the current user has a valid user ID
-    if (!currentUserId) {
-        console.error("Current user does not have a valid user ID");
-        return;
+  
+    if (!currentUserId || !activeUserUsername) {
+      console.error("Current user does not have a valid user ID");
+      return;
     }
-
-    // Ensure the user doesn't create a chat with themselves
+  
     if (selectedUser === activeUserUsername) {
-        console.error("You cannot create a chat with yourself");
-        return;
+      console.error("You cannot create a chat with yourself");
+      return;
     }
-
-    // Check if a chat with these participants already exists
-    // Check if the current user initiated the chat
-    const q1 = query(chatsRef, where('participants', 'array-contains', activeUserUsername));
-
-    const existingChat1 = await getDocs(q1);
-
-    // Check if the other user initiated the chat
-    const q2 = query(chatsRef, where('participants', 'array-contains', selectedUser));
-
-    const existingChat2 = await getDocs(q2);
-
-    if (!existingChat1.empty || !existingChat2.empty) {
-        for (let doc of existingChat1.docs.concat(existingChat2.docs)) {
-            // Ensure both participants are in the chat
-            if (doc.data().participants.includes(activeUserUsername) && doc.data().participants.includes(selectedUser)) {
-                console.error("A chat between these users already exists.");
-                return;
-            }
-        }
-    }
-
-    // Set up participants and add new chat
+  
     const participants = [activeUserUsername, selectedUser];
-
-    // Add new chat to Firestore database
+    const unreadMessages = { [activeUserUsername]: 0, [selectedUser]: 0 };
+  
     addDoc(chatsRef, {
       participants: participants,
-      messages: [], // initialize with an empty messages array
-      lastUpdated: new Date() // set the current timestamp
+      messages: [],
+      unreadMessages: unreadMessages,
+      lastUpdated: new Date()
     }).then(() => {
-        console.log("Chat created successfully");
-        onChatCreated(selectedUser);
+      console.log("Chat created successfully");
+      onChatCreated(selectedUser);
     }).catch((error) => {
-        console.error("Error creating chat:", error);
+      console.error("Error creating chat:", error);
     });
-  } 
+  };
 
 
   useEffect(() => {
