@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../../components/Navbar';
 import PrivateRoute from '../../components/PrivateRoute';
-import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, onSnapshot, getDocs, doc, updateDoc, orderBy } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from '../../components/firebase';
 import { motion } from 'framer-motion';
@@ -54,20 +54,21 @@ export default function Dashboard() {
 
     useEffect(() => {
         if (!currentUsername) return;
-
+    
         const chatsRef = collection(db, 'chats');
-        const q = query(chatsRef, where('participants', 'array-contains', currentUsername));
-
+        const q = query(chatsRef, where('participants', 'array-contains', currentUsername), orderBy('lastUpdated', 'desc'));
+    
         const unsubscribe = onSnapshot(q, snapshot => {
-            const chatUsers = snapshot.docs.map(doc => 
-                doc.data().participants.find((username: string) => username !== currentUsername) as string
-            ).filter(Boolean); // filter out undefined values
-
-            setChats(chatUsers);
+            const chatUsers = snapshot.docs.map(doc => ({
+                username: doc.data().participants.find((username: string) => username !== currentUsername),
+                lastUpdated: doc.data().lastUpdated?.toDate(),
+            })).filter(user => user.username); // filter out undefined values
+    
+            setChats(chatUsers.map(user => user.username));
         });
-
+    
         return () => unsubscribe();
-    }, [currentUsername]);
+    }, [currentUsername, db]);
 
     useEffect(() => {
         if (!currentUsername || !activeChatUser) return;
@@ -91,18 +92,20 @@ export default function Dashboard() {
 
     const sendMessage = async () => {
         if (!messageInput.trim()) return;
-
+    
         const updatedMessages = [...messages, { text: messageInput, sender: currentUsername! }];
-
         const chatsRef = collection(db, 'chats');
         const q = query(chatsRef, where('participants', 'in', [[currentUsername, activeChatUser], [activeChatUser, currentUsername]]));
-
+    
         getDocs(q).then(snapshot => {
             snapshot.forEach(async docSnapshot => {
-                await updateDoc(doc(db, 'chats', docSnapshot.id), { messages: updatedMessages });
+                await updateDoc(doc(db, 'chats', docSnapshot.id), { 
+                    messages: updatedMessages,
+                    lastUpdated: new Date() // update the timestamp
+                });
             });
         });
-
+    
         setMessageInput('');
     };
 

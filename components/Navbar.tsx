@@ -121,14 +121,15 @@ export default function Navbar() {
 
     // Add new chat to Firestore database
     addDoc(chatsRef, {
-        participants: participants,
-        messages: []  // initialize with an empty messages array
+      participants: participants,
+      messages: [], // initialize with an empty messages array
+      lastUpdated: new Date() // set the current timestamp
     }).then(() => {
         console.log("Chat created successfully");
     }).catch((error) => {
         console.error("Error creating chat:", error);
     });
-  }
+  } 
 
 
   useEffect(() => {
