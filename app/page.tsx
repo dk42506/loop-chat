@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Video from '@/components/Video';
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Home() {
       {/* Navbar */}
       <nav className="flex justify-between items-center p-4 shadow-md" style={{ backgroundColor: '#ffffff' }}>
         <div className="flex items-center">
-          <img src="/images/favicon.svg" alt="Loop Chat Logo" className="h-8 mr-2" />
+          <Image src="/images/favicon.svg" alt="Loop Chat Logo" width={32} height={32} className="h-8 mr-2" />
           <span className="text-xl font-bold text-black">Loop Chat</span>
         </div>
         <motion.button
@@ -28,7 +29,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="flex-grow flex items-center justify-center bg-white">
         <div className="text-center p-10">
-          <img src="/images/logo.svg" alt="Loop Chat" className="mx-auto h-auto" />
+          <Image src="/images/logo.svg" alt="Loop Chat" width={500} height={500} className="mx-auto h-auto" />
           <h1 className="text-4xl font-bold text-black mt-5 mb-3">Connect Effortlessly</h1>
           <p className="text-lg text-grey3">Create an account, search for users, and start chatting!</p>
         </div>
