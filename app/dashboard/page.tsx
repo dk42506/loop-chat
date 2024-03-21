@@ -173,7 +173,7 @@ export default function Dashboard() {
         <PrivateRoute>
             <div className="flex flex-col min-h-screen bg-white text-black">
                 <Navbar onChatCreated={handleNewChatCreated} />
-    
+
                 <div className="flex flex-1 overflow-hidden">
                     {/* Arrow button for toggling chat panel visibility, only visible in mobile */}
                     <div 
@@ -212,7 +212,13 @@ export default function Dashboard() {
                     </div>
     
                     {/* Main content area */}
-                    <div className="flex-1 flex flex-col p-4">
+                    <div className="flex-1 flex flex-col">
+                        {/* Conditionally render the active chat user's username in mobile view */}
+                        {!isChatOpen && activeChatUser && (
+                            <div className="block md:hidden text-center py-2">
+                                <strong>{activeChatUser}</strong>
+                            </div>
+                        )}
                         <div className="flex flex-col flex-grow relative">
                             <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
                                 {messages.map((message, index) => (
