@@ -197,7 +197,10 @@ export default function Dashboard() {
                     <ul className="space-y-2 p-4">
                         {chats.map((chat, index) => (
                             <li key={index} 
-                                onClick={() => handleChatSelection(chat.username)}
+                                onClick={() => {
+                                    handleChatSelection(chat.username),
+                                    setIsChatOpen(false);
+                                }}
                                 className={`border-b border-gray-300 text-lg p-4 flex justify-between items-center cursor-pointer transition-colors duration-300 ${chat.username === activeChatUser ? 'bg-gray-200' : 'hover:bg-gray-100'}`}>
                                 {chat.username}
                                 {chat.unreadCount > 0 && (
