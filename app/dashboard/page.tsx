@@ -177,6 +177,7 @@ export default function Dashboard() {
                 <div className="flex flex-1 overflow-hidden">
                     {/* Chat panel */}
                     <div className={`chat-panel transition-transform ${isChatOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-20 w-full max-w-xs bg-white shadow-lg overflow-y-auto md:static md:translate-x-0 md:max-w-full md:w-1/4 lg:w-1/5`}>
+                    <div className="text-lg text-center font-bold p-4 border-b md:hidden">Chats</div>
                     <ul className="space-y-2 p-4">
                         {chats.map((chat, index) => (
                             <li key={index} 
@@ -243,7 +244,7 @@ export default function Dashboard() {
                                     />
                                     <motion.button
                                         onClick={sendMessage}
-                                        className="bg-grey2 px-4 py-2 rounded-lg hover:bg-blue-600"
+                                        className="bg-grey2 px-4 py-2 rounded-lg hover:vibrant3"
                                         whileHover={{ scale: 1.05 }}
                                     >
                                         Send
