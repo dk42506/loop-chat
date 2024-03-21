@@ -204,7 +204,7 @@ export default function Dashboard() {
                             </div>
                         )}
                         <div className="flex flex-col flex-grow relative">
-                            <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20">
+                            <div ref={messageContainerRef} className="overflow-y-auto custom-scroll absolute inset-0 pb-20 pt-10 px-2">
                                 {messages.map((message, index) => (
                                     <div key={index} className={`mb-2 ${message.sender === currentUsername ? 'text-right' : 'text-left'}`}>
                                         <div className={`inline-block px-4 py-2 rounded-lg ${message.sender === currentUsername ? 'bg-blue-100' : 'bg-gray-100'}`}>
