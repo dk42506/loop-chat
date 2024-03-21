@@ -66,6 +66,16 @@ export default function Login() {
       setCreateAccountError("Please complete all fields.");
       return;
     }
+
+    if (username.length > 16) {
+      setCreateAccountError("Username cannot be more than 16 characters.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setCreateAccountError("Password must be at least 8 characters long.");
+      return;
+    }
   
     const usernameExists = await checkUsernameExists(username);
   
