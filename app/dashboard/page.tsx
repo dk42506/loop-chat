@@ -175,23 +175,6 @@ export default function Dashboard() {
                 <Navbar onChatCreated={handleNewChatCreated} />
 
                 <div className="flex flex-1 overflow-hidden">
-                    {/* Arrow button for toggling chat panel visibility, only visible in mobile */}
-                    <div 
-                        className={`fixed left-0 top-1/2 z-30 transform -translate-y-1/2 cursor-pointer p-2 bg-gray-200 pt-10 pb-10 ${isChatOpen ? 'bg-opacity-80' : 'bg-opacity-50'} rounded-r md:hidden`}
-                        onClick={toggleChat}
-                        style={{ transition: 'transform 0.3s, background-color 0.3s' }}
-                    >
-                        <svg
-                            className={`h-6 w-6 text-gray-600 transform ${isChatOpen ? 'rotate-180' : 'rotate-0'}`}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            style={{ transition: 'transform 0.3s' }}
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </div>
-    
                     {/* Chat panel */}
                     <div className={`chat-panel transition-transform ${isChatOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-20 w-full max-w-xs bg-white shadow-lg overflow-y-auto md:static md:translate-x-0 md:max-w-full md:w-1/4 lg:w-1/5`}>
                     <ul className="space-y-2 p-4">
@@ -228,6 +211,24 @@ export default function Dashboard() {
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+
+                            {/* Chat toggle button positioned above the sendMessage bar */}
+                            <div className="absolute bottom-24 left-2 md:hidden">
+                                <button 
+                                    onClick={toggleChat} 
+                                    className="p-2 bg-gray-200 rounded-full shadow-lg"
+                                    style={{ transition: 'background-color 0.3s' }}
+                                >
+                                    <svg
+                                        className={`h-6 w-6 transform ${isChatOpen ? 'rotate-180' : 'rotate-0'}`}
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
                             </div>
     
                             <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t">
