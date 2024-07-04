@@ -35,6 +35,7 @@ export default function Login() {
     setShowLoginForm(true);
     setEmail("")
     setPassword("")
+    setLoginError("")
     const user = auth.currentUser;
 
     if (user) {
@@ -52,6 +53,7 @@ export default function Login() {
     setShowCreateAccountForm(true);
     setEmail("")
     setPassword("")
+    setCreateAccountError("")
   };
 
   const checkUsernameExists = async (username: string) => {
@@ -146,19 +148,28 @@ export default function Login() {
     <div className="bg-grey1 text-black min-h-screen flex flex-col items-center justify-center space-y-8">
       <AnimatePresence>
         {showLoginForm && (
-          <motion.div
-            key="login-form"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            className="p-10 text-center mb-6"
-          >
-            <h1 className="text-6xl font-semibold mb-4">Log In</h1>
-            <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-xl">
+          <>
+            <motion.div
+              key="login-title"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              className="p-10 text-center mb-6"
+            >
+              <h1 className="text-6xl font-semibold mb-4">Log In</h1>
+            </motion.div>
+            <motion.form
+              key="login-form"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              onSubmit={(e) => e.preventDefault()}
+              className="w-full max-w-xl"
+            >
               <div className="mb-6">
                 <input
                   type="email"
-                  className="w-full px-4 py-3 border-b border-gray-200 bg-transparent rounded-none text-blue5 text-xl"
+                  className="w-full px-4 py-3 border-b border-gray-200 focus:outline-none bg-transparent rounded-none text-blue5 text-xl"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -167,7 +178,7 @@ export default function Login() {
               <div className="mb-6">
                 <input
                   type="password"
-                  className="w-full px-4 py-3 border-b border-gray-200 bg-transparent rounded-none text-blue5 text-xl"
+                  className="w-full px-4 py-3 border-b border-gray-200 focus:outline-none bg-transparent rounded-none text-blue5 text-xl"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -176,7 +187,7 @@ export default function Login() {
               {loginError && <p className="text-red-500 text-lg">{loginError}</p>}
               <motion.button
                 type="submit"
-                className="w-full bg-blue5 text-white px-4 py-2 rounded-lg hover:bg-vibrant2"
+                className="w-full bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-vibrant2 "
                 whileHover={{ scale: 1.05 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -185,26 +196,41 @@ export default function Login() {
               >
                 Log In
               </motion.button>
-            </form>
-            <p className="text-lg mt-4">
+            </motion.form>
+            <motion.p
+              key="login-switch"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              className="text-lg mt-4"
+            >
               Don't have an account? <a className="text-blue5 hover:underline cursor-pointer" onClick={handleDontHaveAccount}>Create Account</a>
-            </p>
-          </motion.div>
+            </motion.p>
+          </>
         )}
         {showCreateAccountForm && (
-          <motion.div
-            key="create-account-form"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="p-10 text-center mb-6"
-          >
-            <h1 className="text-6xl font-semibold mb-4">Create Your Account</h1>
-            <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-xl">
+          <>
+            <motion.div
+              key="create-account-title"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              className="p-10 text-center mb-6"
+            >
+              <h1 className="text-6xl font-semibold mb-4">Create Your Account</h1>
+            </motion.div>
+            <motion.form
+              key="create-account-form"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              onSubmit={(e) => e.preventDefault()}
+              className="w-full max-w-xl"
+            >
               <div className="mb-6">
                 <input
                   type="email"
-                  className="w-full px-4 py-3 border-b border-gray-200 bg-transparent rounded-none text-blue5 text-xl"
+                  className="w-full px-4 py-3 border-b border-gray-200 focus:outline-none bg-transparent rounded-none text-blue5 text-xl"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -213,7 +239,7 @@ export default function Login() {
               <div className="mb-6">
                 <input
                   type="password"
-                  className="w-full px-4 py-3 border-b border-gray-200 bg-transparent rounded-none text-blue5 text-xl"
+                  className="w-full px-4 py-3 border-b border-gray-200 focus:outline-none bg-transparent rounded-none text-blue5 text-xl"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -222,15 +248,16 @@ export default function Login() {
               <div className="mb-6">
                 <input
                   type="text"
-                  className="w-full px-4 py-3 border-b border-gray-200 bg-transparent rounded-none text-blue5 text-xl"
+                  className="w-full px-4 py-3 border-b border-gray-200 focus:outline-none bg-transparent rounded-none text-blue5 text-xl"
                   placeholder="Username"
+                  value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               {createAccountError && <p className="text-red-500 text-lg">{createAccountError}</p>}
               <motion.button
                 type="submit"
-                className="w-full bg-blue5 text-white px-4 py-2 rounded-lg hover:bg-vibrant2"
+                className="w-full bg-grey2 text-black px-4 py-2 rounded-lg hover:bg-vibrant2"
                 whileHover={{ scale: 1.05 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -239,11 +266,17 @@ export default function Login() {
               >
                 Create Account
               </motion.button>
-            </form>
-            <p className="text-lg mt-4">
+            </motion.form>
+            <motion.p
+              key="create-account-switch"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              className="text-lg mt-4"
+            >
               Already have an account? <a className="text-blue5 hover:underline cursor-pointer" onClick={handleGetStarted}>Log In</a>
-            </p>
-          </motion.div>
+            </motion.p>
+          </>
         )}
       </AnimatePresence>
     </div>
